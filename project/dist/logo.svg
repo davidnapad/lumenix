@@ -1,0 +1,12 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M50 50L100 100M100 100L150 50M100 100L150 150" stroke="black" stroke-width="8"/>
+  <circle cx="50" cy="50" r="4" fill="#00FFFF"/>
+  <circle cx="150" cy="50" r="4" fill="#00FFFF"/>
+  <circle cx="100" cy="100" r="4" fill="#00FFFF"/>
+  <circle cx="150" cy="150" r="4" fill="#00FFFF"/>
+  <path d="M50 50C80 70 120 80 150 50" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M150 50C130 80 120 120 150 150" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M150 150C120 130 80 120 50 150" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="50" y="180" font-family="Inter" font-size="24" font-weight="bold" fill="black">LUMENIX</text>
+  <text x="50" y="195" font-family="Inter" font-size="12" fill="black">MEDIA</text>
+</svg>
