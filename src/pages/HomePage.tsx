@@ -60,7 +60,7 @@ export default function HomePage() {
         >
           <div className="flex flex-col items-center">
             <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-8 text-gray-900">
-              Dein Business aufs{" "}
+              Bring dein Business aufs{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00dfff] to-[#A855F7] mt-2 block">
                 nächste Level mit KI.
               </span>
