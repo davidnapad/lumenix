@@ -16,8 +16,9 @@ export default function CalendlyBooking() {
           }
           if (ar[0] === L) {
             const api = function () { p(api, arguments); };
-            const namespace = ar[1]; api.q = api.q || [];
-            if (typeof namespace === "string") {
+            const namespace = ar[1];
+            api.q = api.q || [];
+            if(typeof namespace === "string"){
               cal.ns[namespace] = cal.ns[namespace] || api;
               p(cal.ns[namespace], ar);
               p(cal, ["initNamespace", namespace]);
@@ -28,21 +29,21 @@ export default function CalendlyBooking() {
         };
       })(window, "https://app.cal.com/embed/embed.js", "init");
 
-      Cal("init", "30min", { origin: "https://cal.com" });
+      Cal("init", "30min", {origin:"https://cal.com"});
 
       Cal.ns["30min"]("inline", {
-        elementOrSelector: "#my-cal-inline-home",
-        config: { "layout": "month_view" },
-        calLink: "davidnapad/30min"
+        elementOrSelector:"#my-cal-inline-home",
+        config: {"layout":"month_view","theme":"light"},
+        calLink: "davidnapad/30min",
       });
 
       Cal.ns["30min"]("ui", {
-        cssVarsPerTheme: {
-          light: { "cal-brand": "#00CFFF" },
-          dark: { "cal-brand": "#A259FF" }
+        "theme":"light",
+        "cssVarsPerTheme":{
+          "light":{"cal-brand":"#00CFFF"}
         },
-        hideEventTypeDetails: true,
-        layout: "month_view"
+        "hideEventTypeDetails":true,
+        "layout":"month_view"
       });
     `;
     document.body.appendChild(script);
@@ -78,12 +79,13 @@ export default function CalendlyBooking() {
           <div 
             className="relative bg-white rounded-2xl overflow-hidden"
             style={{
-              height: '750px',
+              height: '750px'
             }}
           >
             <div 
               id="my-cal-inline-home" 
               className="w-full h-full"
+              style={{ width: '100%', height: '100%', overflow: 'scroll' }}
             />
           </div>
         </div>

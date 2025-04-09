@@ -21,44 +21,88 @@ export default function TeamSection() {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Unser Team
+            Über uns
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
             Experten für KI-Integration und Automatisierung – wir machen dein Business fit für die Zukunft.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-3 gap-2 md:gap-6">
-          <motion.div 
-            className="w-full"
-            onMouseEnter={() => setBotDirection('left')} 
-            onMouseLeave={() => setBotDirection(null)}
-          >
-            <TeamMember
-              name="David"
-              role="Kundenbetreuung & KI-Beratung"
-              image="https://i.postimg.cc/V66qXsmP/DSC02935-Photoroom-1.jpg"
-              subtitle="Beratung, Support & Prozessautomatisierung"
-              className="scale-[0.85] md:scale-100 origin-top"
-            />
-          </motion.div>
-          
-          <div className="flex items-center justify-center">
-            <BotMascot direction={botDirection} />
+        <div className="relative">
+          {/* Team members grid */}
+          <div className="grid grid-cols-3 gap-2 md:gap-6">
+            <motion.div 
+              className="w-full"
+              onMouseEnter={() => setBotDirection('left')} 
+              onMouseLeave={() => setBotDirection(null)}
+            >
+              <TeamMember
+                name="David"
+                role="Kundenbetreuung & KI-Beratung"
+                mobileRole="Planung & Entwicklung"
+                image="https://i.postimg.cc/V66qXsmP/DSC02935-Photoroom-1.jpg"
+                className="scale-[0.85] md:scale-100 origin-top"
+              />
+            </motion.div>
+            
+            <div className="flex items-center justify-center">
+              <BotMascot direction={botDirection} />
+            </div>
+            
+            <motion.div 
+              className="w-full"
+              onMouseEnter={() => setBotDirection('right')} 
+              onMouseLeave={() => setBotDirection(null)}
+            >
+              <TeamMember
+                name="Daniel"
+                role="Systemarchitektur & Automatisierung"
+                mobileRole="Entwicklung"
+                image="https://i.postimg.cc/TP5mP53F/DSC02935-Photoroom.jpg"
+                className="scale-[0.85] md:scale-100 origin-top"
+              />
+            </motion.div>
           </div>
-          
+
+          {/* Team Description */}
           <motion.div 
-            className="w-full"
-            onMouseEnter={() => setBotDirection('right')} 
-            onMouseLeave={() => setBotDirection(null)}
+            className="mt-16 md:mt-20 max-w-3xl mx-auto text-center px-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
           >
-            <TeamMember
-              name="Daniel"
-              role="Entwicklung"
-              image="https://i.postimg.cc/TP5mP53F/DSC02935-Photoroom.jpg"
-              subtitle="Systemarchitektur & Automatisierung"
-              className="scale-[0.85] md:scale-100 origin-top"
-            />
+            <div className="relative">
+              {/* Glow effect */}
+              <div 
+                className="absolute -inset-[2px] rounded-2xl"
+                style={{
+                  background: 'linear-gradient(to right, rgba(0, 207, 255, 0.3), rgba(162, 89, 255, 0.3))',
+                  boxShadow: `
+                    0 0 25px rgba(0, 207, 255, 0.3),
+                    0 0 50px rgba(162, 89, 255, 0.2)
+                  `,
+                }}
+              />
+              
+              {/* Content container */}
+              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-lg border border-white/20">
+                <div className="text-gray-700 text-lg md:text-xl leading-[1.8] space-y-8">
+                  <p>
+                    <strong>Wir sind David und Daniel</strong> – seit über 8 Jahren ein eingespieltes Team.
+                  </p>
+                  <p>
+                    <strong>Daniel</strong> bringt mit seinem Studium tiefes technisches Know-how im Bereich KI und Automatisierung ein.
+                  </p>
+                  <p>
+                    <strong>David</strong> kümmert sich um alles rund um Beratung, Kundenbetreuung, Planung und Umsetzung.
+                  </p>
+                  <p>
+                    <strong>Unsere Stärken ergänzen sich perfekt</strong> – so liefern wir gemeinsam maßgeschneiderte KI-Lösungen, die wirklich wirken.
+                  </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

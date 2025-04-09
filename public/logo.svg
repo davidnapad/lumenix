@@ -1,12 +1,46 @@
-<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M50 50L100 100M100 100L150 50M100 100L150 150" stroke="black" stroke-width="8"/>
-  <circle cx="50" cy="50" r="4" fill="#00FFFF"/>
-  <circle cx="150" cy="50" r="4" fill="#00FFFF"/>
-  <circle cx="100" cy="100" r="4" fill="#00FFFF"/>
-  <circle cx="150" cy="150" r="4" fill="#00FFFF"/>
-  <path d="M50 50C80 70 120 80 150 50" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
-  <path d="M150 50C130 80 120 120 150 150" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
-  <path d="M150 150C120 130 80 120 50 150" stroke="#00FFFF" stroke-width="1" stroke-dasharray="4 4"/>
-  <text x="50" y="180" font-family="Inter" font-size="24" font-weight="bold" fill="black">LUMENIX</text>
-  <text x="50" y="195" font-family="Inter" font-size="12" fill="black">MEDIA</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <defs>
+    <mask id="circular-mask">
+      <circle cx="500" cy="500" r="500" fill="white"/>
+    </mask>
+  </defs>
+  <g mask="url(#circular-mask)">
+    <rect width="1000" height="1000" fill="white"/>
+    <g transform="translate(200,200) scale(0.6)">
+      <!-- Main "M" shape in black -->
+      <path d="M200,200 L400,200 L500,400 L600,200 L800,200 L600,600 L500,400 L400,600 Z" fill="black"/>
+      
+      <!-- Network pattern in cyan -->
+      <g stroke="#00dfff" strokeWidth="3">
+        <!-- Dots -->
+        <circle cx="200" cy="200" r="4"/>
+        <circle cx="300" cy="150" r="4"/>
+        <circle cx="400" cy="200" r="4"/>
+        <circle cx="500" cy="400" r="4"/>
+        <circle cx="600" cy="200" r="4"/>
+        <circle cx="700" cy="150" r="4"/>
+        <circle cx="800" cy="200" r="4"/>
+        <circle cx="300" cy="300" r="4"/>
+        <circle cx="700" cy="300" r="4"/>
+        <circle cx="400" cy="600" r="4"/>
+        <circle cx="600" cy="600" r="4"/>
+        <circle cx="200" cy="400" r="4"/>
+        <circle cx="800" cy="400" r="4"/>
+        
+        <!-- Connecting lines -->
+        <line x1="200" y1="200" x2="300" y2="150"/>
+        <line x1="300" y1="150" x2="400" y2="200"/>
+        <line x1="400" y1="200" x2="500" y2="400"/>
+        <line x1="500" y1="400" x2="600" y2="200"/>
+        <line x1="600" y1="200" x2="700" y2="150"/>
+        <line x1="700" y1="150" x2="800" y2="200"/>
+        <line x1="200" y1="200" x2="200" y2="400"/>
+        <line x1="800" y1="200" x2="800" y2="400"/>
+        <line x1="200" y1="400" x2="400" y2="600"/>
+        <line x1="800" y1="400" x2="600" y2="600"/>
+        <line x1="300" y1="300" x2="400" y2="200"/>
+        <line x1="700" y1="300" x2="600" y2="200"/>
+      </g>
+    </g>
+  </g>
 </svg>

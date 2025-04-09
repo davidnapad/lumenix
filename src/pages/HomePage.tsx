@@ -163,6 +163,11 @@ export default function HomePage() {
         </div>
       </motion.section>
 
+      {/* Team Section - Moved here */}
+      <section id="ueber-uns">
+        <TeamSection />
+      </section>
+
       {/* Chatbot Demo */}
       <section id="chatbot-demo">
         <ChatbotDemo />
@@ -217,11 +222,6 @@ export default function HomePage() {
 
       {/* Process Timeline */}
       <CurvedTimeline />
-
-      {/* Team Section */}
-      <section id="ueber-uns">
-        <TeamSection />
-      </section>
 
       {/* FAQ */}
       <motion.section 

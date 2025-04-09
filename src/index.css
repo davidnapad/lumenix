@@ -42,3 +42,96 @@ html {
     box-shadow: rgba(35, 127, 197, 0.5) 0px 1px 40px;
   }
 }
+
+/* Calendar mobile styles */
+@media (max-width: 768px) {
+  /* Calendar container adjustments */
+  #my-cal-inline,
+  #my-cal-inline-home {
+    min-height: 85vh !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Calendar wrapper adjustments */
+  .relative.bg-white.rounded-xl.md\:rounded-2xl.overflow-hidden,
+  .relative.bg-white.rounded-2xl.overflow-hidden {
+    height: auto !important;
+    min-height: 85vh !important;
+  }
+
+  /* Inner calendar container */
+  #my-cal-inline > div,
+  #my-cal-inline-home > div,
+  [data-cal-namespace] {
+    height: auto !important;
+    min-height: 85vh !important;
+  }
+
+  /* Time slots container */
+  [data-cal-namespace] .timeslots-container {
+    height: auto !important;
+    min-height: fit-content !important;
+    padding-bottom: 100px !important;
+  }
+
+  /* Time slots list */
+  [data-cal-namespace] .timeslots {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 40px !important;
+  }
+
+  /* Individual time slot buttons */
+  [data-cal-namespace] .timeslots button {
+    margin-bottom: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Ensure bottom content is visible */
+  [data-cal-namespace] .absolute.bottom-0 {
+    position: relative !important;
+    margin-top: 20px !important;
+  }
+
+  /* Guest form adjustments */
+  [data-cal-namespace] form[data-form-type="guest"] {
+    min-height: auto !important;
+    height: auto !important;
+    padding: 16px !important;
+  }
+
+  /* Form fields container */
+  [data-cal-namespace] form[data-form-type="guest"] > div {
+    gap: 12px !important;
+  }
+
+  /* Individual form fields */
+  [data-cal-namespace] form[data-form-type="guest"] input,
+  [data-cal-namespace] form[data-form-type="guest"] textarea {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+  /* Form labels */
+  [data-cal-namespace] form[data-form-type="guest"] label {
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Form buttons */
+  [data-cal-namespace] form[data-form-type="guest"] button {
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+  }
+
+  /* Terms and privacy section */
+  [data-cal-namespace] form[data-form-type="guest"] .text-default {
+    font-size: 12px !important;
+    margin-top: 12px !important;
+  }
+}

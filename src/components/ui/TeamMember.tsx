@@ -5,6 +5,7 @@ import { cn } from '../../lib/utils';
 interface TeamMemberProps {
   name: string;
   role: string;
+  mobileRole?: string;
   subtitle?: string;
   image?: string;
   className?: string;
@@ -13,6 +14,7 @@ interface TeamMemberProps {
 export function TeamMember({ 
   name, 
   role,
+  mobileRole,
   subtitle,
   image,
   className 
@@ -50,14 +52,8 @@ export function TeamMember({
         <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1 md:mb-2">{name}</h3>
         <p className="text-sm md:text-base text-gray-800 font-medium mb-1">
           <span className="hidden md:inline">{role}</span>
-          <span className="md:hidden">Entwicklung</span>
+          <span className="md:hidden">{mobileRole || role}</span>
         </p>
-        {subtitle && (
-          <p className="text-xs md:text-sm text-gray-600">
-            <span className="hidden md:inline">{subtitle}</span>
-            <span className="md:hidden">Tech</span>
-          </p>
-        )}
       </div>
     </motion.div>
   );
