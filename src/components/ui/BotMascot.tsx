@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Bot } from 'lucide-react';
 
 interface BotMascotProps {
@@ -7,7 +7,9 @@ interface BotMascotProps {
 }
 
 export function BotMascot({ direction }: BotMascotProps) {
+  const prefersReducedMotion = useReducedMotion();
   const rotationDegrees = direction === 'left' ? -15 : direction === 'right' ? 15 : 0;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <motion.div 
@@ -15,11 +17,11 @@ export function BotMascot({ direction }: BotMascotProps) {
       initial={{ opacity: 0, scale: 0.5 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
     >
       <motion.div 
-        className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center"
-        whileHover={{ scale: 1.05 }}
+        className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center will-change-transform"
+        whileHover={prefersReducedMotion || isMobile ? {} : { scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         {/* Outer glow and gradient border */}
@@ -28,7 +30,7 @@ export function BotMascot({ direction }: BotMascotProps) {
           <div className="w-full h-full rounded-full bg-white">
             {/* Bot icon with rotation */}
             <motion.div
-              animate={{ rotate: rotationDegrees }}
+              animate={prefersReducedMotion || isMobile ? {} : { rotate: rotationDegrees }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
               className="w-full h-full flex items-center justify-center"
             >
@@ -37,9 +39,13 @@ export function BotMascot({ direction }: BotMascotProps) {
           </div>
         </div>
 
-        {/* Additional decorative elements */}
-        <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl opacity-50" />
-        <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 blur-2xl opacity-30" />
+        {/* Additional decorative elements - simplified for mobile */}
+        {!isMobile && (
+          <>
+            <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl opacity-50" />
+            <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 blur-2xl opacity-30" />
+          </>
+        )}
       </motion.div>
       
       {/* Title with gradient text */}
@@ -48,7 +54,7 @@ export function BotMascot({ direction }: BotMascotProps) {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.2, duration: 0.5 }}
+        transition={{ delay: 0.2, duration: prefersReducedMotion || isMobile ? 0.2 : 0.5 }}
       >
         <h3 className="text-sm md:text-lg font-medium bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent">
           KI mit Persönlichkeit

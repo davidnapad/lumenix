@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Search, ClipboardList, FlaskConical, Rocket, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -37,6 +37,8 @@ const steps = [
 ];
 
 export default function CurvedTimeline() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section id="ablauf" className="min-h-[600px] relative overflow-hidden bg-white py-12 scroll-mt-20">
       {/* Background decorative elements */}
@@ -51,6 +53,7 @@ export default function CurvedTimeline() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: prefersReducedMotion ? 0.3 : 0.5 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-2">
             In 5 Schritten zur smarten KI-Lösung
@@ -63,9 +66,10 @@ export default function CurvedTimeline() {
         <div className="relative max-w-5xl mx-auto">
           {/* The curved flow line with more dynamic path */}
           <svg 
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
             className="absolute left-1/2 -translate-x-1/2 h-full w-full"
             viewBox="0 0 1000 800"
-            preserveAspectRatio="none"
             style={{ top: '30px' }}
           >
             <defs>
@@ -97,9 +101,10 @@ export default function CurvedTimeline() {
               strokeWidth="4"
               strokeLinecap="round"
               initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
+              whileInView={{ pathLength: prefersReducedMotion ? 1 : 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 2, ease: "easeInOut" }}
+              transition={{ duration: prefersReducedMotion ? 0.5 : 2, ease: "easeInOut" }}
+              className="will-change-transform"
             />
           </svg>
 
@@ -114,13 +119,14 @@ export default function CurvedTimeline() {
                 initial={{ opacity: 0, x: step.position === 'left' ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
+                transition={{ duration: prefersReducedMotion ? 0.3 : 0.5, delay: prefersReducedMotion ? 0.1 : index * 0.2 }}
+                className="will-change-transform"
               >
                 <motion.div 
                   className={`flex items-center gap-4 max-w-md relative group ${
                     step.position === 'left' ? 'flex-row' : 'flex-row-reverse'
                   }`}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 10 }}
                 >
                   {/* Glowing background */}
@@ -136,7 +142,7 @@ export default function CurvedTimeline() {
                     {/* Icon with connecting line */}
                     <motion.div 
                       className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00dfff] to-[#A855F7] p-[2px] relative z-10 group"
-                      whileHover={{ scale: 1.2 }}
+                      whileHover={prefersReducedMotion ? {} : { scale: 1.2 }}
                       transition={{ type: "spring", stiffness: 300, damping: 10 }}
                     >
                       <div className="w-full h-full rounded-full bg-white flex items-center justify-center group-hover:bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 transition-colors duration-300">
@@ -168,11 +174,11 @@ export default function CurvedTimeline() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: prefersReducedMotion ? 0.2 : 0.5 }}
         >
           <Link 
             to="/kalender"
-            className="inline-flex items-center px-6 py-3 rounded-xl text-white font-medium transition-all duration-300 bg-gradient-to-r from-[#00dfff] to-[#A855F7] hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1 text-sm"
+            className="inline-flex items-center px-6 py-3 rounded-xl text-white font-medium transition-all duration-300 bg-gradient-to-r from-[#00dfff] to-[#A855F7] hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1 text-sm will-change-transform"
           >
             Jetzt Erstgespräch buchen
             <Rocket className="ml-2 w-4 h-4" />

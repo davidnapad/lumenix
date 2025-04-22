@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function CalendarPage() {
   const location = useLocation();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [location]);
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  }, [location, prefersReducedMotion]);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -71,7 +72,7 @@ export default function CalendarPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: prefersReducedMotion ? 0.3 : 0.6 }}
           className="max-w-[1000px] mx-auto px-4 flex flex-col items-center"
         >
           {/* Back Navigation */}
@@ -109,7 +110,7 @@ export default function CalendarPage() {
             
             {/* Calendar wrapper */}
             <div 
-              className="relative bg-white rounded-xl md:rounded-2xl overflow-hidden"
+              className="relative bg-white rounded-xl md:rounded-2xl overflow-hidden will-change-transform"
               style={{
                 height: '750px'
               }}
@@ -117,7 +118,7 @@ export default function CalendarPage() {
               <div 
                 id="my-cal-inline" 
                 className="w-full h-full"
-                style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+                style={{ width: '100%', height: '100%', overflow: 'scroll', willChange: 'transform' }}
               />
             </div>
           </div>
@@ -125,7 +126,7 @@ export default function CalendarPage() {
           {/* Back to top button */}
           <div className="w-full max-w-[720px] text-center mt-8">
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' })}
               className="inline-flex items-center text-gray-600 hover:text-[#00dfff] transition-colors"
             >
               Nach oben scrollen

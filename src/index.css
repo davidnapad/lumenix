@@ -23,6 +23,29 @@ html {
   scroll-padding-top: 80px;
 }
 
+/* Add will-change for smoother animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Disable animation based on preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-spin {
+    animation: none !important;
+  }
+}
+
 @layer components {
   .gradient-button {
     background: linear-gradient(92.88deg, rgb(69, 94, 181) 9.16%, rgb(86, 67, 204) 43.89%, rgb(103, 63, 215) 64.72%);
@@ -133,5 +156,28 @@ html {
   [data-cal-namespace] form[data-form-type="guest"] .text-default {
     font-size: 12px !important;
     margin-top: 12px !important;
+  }
+}
+
+/* Performance optimizations */
+@media (max-width: 768px) {
+  /* Reduce animation complexity on mobile */
+  .animate-aurora {
+    animation-duration: 30s !important;
+  }
+  
+  /* Simplify shadows */
+  .shadow-lg, .shadow-md, .shadow-xl {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  /* Simplify or remove certain effects on mobile */
+  .blur-3xl, .blur-2xl, .blur-xl {
+    filter: blur(8px) !important;
+  }
+  
+  /* Reduce opacity of decorative elements */
+  .from-[#00dfff]/5, .to-[#A855F7]/5 {
+    opacity: 0.3 !important;
   }
 }

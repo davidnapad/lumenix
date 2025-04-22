@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 interface AccordionItemProps {
@@ -10,6 +10,8 @@ interface AccordionItemProps {
 }
 
 export function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProps) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.div 
       className="border-b border-gray-200 last:border-none"
@@ -22,7 +24,7 @@ export function AccordionItem({ question, answer, isOpen, onToggle }: AccordionI
         <span className="text-lg font-semibold">{question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: prefersReducedMotion ? 0.1 : 0.2 }}
         >
           <ChevronDown className="w-5 h-5 text-gray-500" />
         </motion.div>
@@ -30,11 +32,11 @@ export function AccordionItem({ question, answer, isOpen, onToggle }: AccordionI
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={prefersReducedMotion ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden"
+            exit={prefersReducedMotion ? { height: "auto", opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.3, ease: "easeInOut" }}
+            className="overflow-hidden will-change-transform"
           >
             <div className="pb-4 text-gray-600">
               {answer}

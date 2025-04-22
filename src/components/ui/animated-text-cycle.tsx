@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 interface AnimatedWordCycleProps {
   words: string[];
@@ -14,26 +14,36 @@ export default function AnimatedWordCycle({
 }: AnimatedWordCycleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const prefersReducedMotion = useReducedMotion();
   
   // Find the longest word to set minimum width
   const longestWord = words.reduce((a, b) => a.length > b.length ? a : b);
   const minWidth = `${longestWord.length}ch`;
 
   useEffect(() => {
+    // Use a longer interval and simpler animation if reduced motion is preferred
+    const finalInterval = prefersReducedMotion ? interval * 1.5 : interval;
+    
     const intervalId = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
+      if (prefersReducedMotion) {
+        // Simple transition for reduced motion
         setCurrentIndex((current) => (current + 1) % words.length);
-        setIsVisible(true);
-      }, 200);
-    }, interval);
+      } else {
+        // Fade out and in for normal animation
+        setIsVisible(false);
+        setTimeout(() => {
+          setCurrentIndex((current) => (current + 1) % words.length);
+          setIsVisible(true);
+        }, 200);
+      }
+    }, finalInterval);
 
     return () => clearInterval(intervalId);
-  }, [interval, words.length]);
+  }, [interval, words.length, prefersReducedMotion]);
 
   return (
     <div 
-      className="inline-block relative" 
+      className="inline-block relative will-change-contents" 
       style={{ 
         minWidth,
         width: 'auto',
@@ -45,9 +55,10 @@ export default function AnimatedWordCycle({
         {isVisible && (
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
             className={`absolute inset-0 whitespace-nowrap ${className}`}
             style={{ 
               display: 'flex',

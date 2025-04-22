@@ -1,6 +1,6 @@
 import { Mail } from 'lucide-react';
 import { useState, FormEvent } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ export default function ContactForm() {
     message: '',
     privacy: false
   });
+  const prefersReducedMotion = useReducedMotion();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -111,9 +112,9 @@ export default function ContactForm() {
 
           <motion.button
             type="submit"
-            className="w-full md:w-fit mx-auto mt-8 flex items-center justify-center bg-gradient-to-r from-cyan-400 to-violet-500 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="w-full md:w-fit mx-auto mt-8 flex items-center justify-center bg-gradient-to-r from-cyan-400 to-violet-500 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all will-change-transform"
+            whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+            whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
           >
             <span>Nachricht senden</span>
             <Mail className="ml-2 h-5 w-5" />

@@ -6,6 +6,7 @@ import {
   useMotionTemplate,
   useMotionValue,
   useTransform,
+  useReducedMotion,
 } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
@@ -29,6 +30,8 @@ export function Button({
   className?: string;
   [key: string]: any;
 }) {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <Component
       className={cn(
@@ -54,7 +57,7 @@ export function Button({
         className="absolute inset-0"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
-        <MovingBorder duration={duration} rx="30%" ry="30%">
+        <MovingBorder duration={duration} rx="30%" ry="30%" prefersReducedMotion={prefersReducedMotion}>
           <div
             className={cn(
               "h-24 w-24 opacity-50 bg-[radial-gradient(circle,var(--accent-blue)_20%,var(--accent-purple)_30%,transparent_70%)] blur-xl group-hover:blur-2xl transition-all duration-500",
@@ -65,14 +68,16 @@ export function Button({
       </div>
 
       {/* Shine effect */}
-      <div 
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: "linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
-          transform: "translateX(-100%)",
-          animation: "shine 1.5s infinite",
-        }}
-      />
+      {!prefersReducedMotion && (
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: "linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+            transform: "translateX(-100%)",
+            animation: "shine 1.5s infinite",
+          }}
+        />
+      )}
 
       {/* Button content */}
       <div
@@ -88,19 +93,21 @@ export function Button({
       </div>
 
       {/* Sparkle effects */}
-      <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full animate-sparkle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.3}s`,
-            }}
-          />
-        ))}
-      </div>
+      {!prefersReducedMotion && (
+        <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full animate-sparkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.3}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </Component>
   );
 }
@@ -110,12 +117,14 @@ export const MovingBorder = ({
   duration = 2000,
   rx,
   ry,
+  prefersReducedMotion,
   ...otherProps
 }: {
   children: React.ReactNode;
   duration?: number;
   rx?: string;
   ry?: string;
+  prefersReducedMotion?: boolean;
   [key: string]: any;
 }) => {
   const pathRef = useRef<SVGRectElement | null>(null);
@@ -137,7 +146,7 @@ export const MovingBorder = ({
   }, []);
 
   useAnimationFrame((time) => {
-    if (!isReady || !pathLength) return;
+    if (!isReady || !pathLength || prefersReducedMotion) return;
     
     const pxPerMillisecond = pathLength / duration;
     progress.set((time * pxPerMillisecond) % pathLength);
@@ -171,6 +180,37 @@ export const MovingBorder = ({
 
   const transform = useMotionTemplate`translateX(${x}px) translateY(${y}px) translateX(-50%) translateY(-50%)`;
 
+  // Static border for reduced motion
+  if (prefersReducedMotion) {
+    return (
+      <>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          className="absolute h-full w-full"
+          width="100%"
+          height="100%"
+          {...otherProps}
+        >
+          <rect
+            fill="none"
+            width="100%"
+            height="100%"
+            rx={rx}
+            ry={ry}
+            stroke="url(#gradient)"
+            strokeWidth="2"
+          />
+        </svg>
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
+          {children}
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <svg
@@ -201,6 +241,7 @@ export const MovingBorder = ({
             display: "inline-block",
             transform,
           }}
+          className="will-change-transform"
         >
           {children}
         </motion.div>

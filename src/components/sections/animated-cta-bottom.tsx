@@ -1,18 +1,20 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AnimatedWordCycle from '../ui/animated-text-cycle';
 import { Button as MovingBorderButton } from '../ui/moving-border';
 
 export default function AnimatedCtaBottom() {
+  const prefersReducedMotion = useReducedMotion();
+  
   return (
     <motion.section 
       className="w-full py-20 bg-white"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: prefersReducedMotion ? 0.3 : 0.6 }}
     >
       <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.h2 
@@ -32,7 +34,7 @@ export default function AnimatedCtaBottom() {
                 "Ergebnisse",
                 "Effizienz"
               ]}
-              interval={2000}
+              interval={prefersReducedMotion ? 3000 : 2000}
               className="bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent font-semibold"
             />
           </div>
@@ -43,7 +45,7 @@ export default function AnimatedCtaBottom() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: prefersReducedMotion ? 0.1 : 0.2 }}
         >
           Lass uns gemeinsam deine Geschäftsprozesse optimieren und in die Zukunft führen.
         </motion.p>
@@ -51,12 +53,12 @@ export default function AnimatedCtaBottom() {
         <div className="relative mt-8 flex flex-col items-center">
           <MovingBorderButton
             borderRadius="1rem"
-            className="bg-gradient-to-r from-[#00dfff] to-[#A855F7] text-white font-medium hover:shadow-xl transition-all duration-500"
+            className="bg-gradient-to-r from-[#00dfff] to-[#A855F7] text-white font-medium hover:shadow-xl transition-all duration-500 will-change-transform"
             as={Link}
             to="/kalender"
             containerClassName="w-auto hover:scale-[1.02] active:scale-[0.98] transition-transform duration-500"
             borderClassName="bg-[radial-gradient(circle,var(--accent-blue)_20%,var(--accent-purple)_30%,transparent_70%)] opacity-70"
-            duration={4000}
+            duration={prefersReducedMotion ? 6000 : 4000}
           >
             <span className="flex items-center px-8 py-4">
               Kostenloses Erstgespräch buchen
@@ -68,7 +70,7 @@ export default function AnimatedCtaBottom() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: prefersReducedMotion ? 0.2 : 0.4 }}
           >
             100% Kostenlos
           </motion.p>

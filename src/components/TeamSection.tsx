@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { TeamMember } from './ui/TeamMember';
 import { BotMascot } from './ui/BotMascot';
+import { useInView } from 'react-intersection-observer';
 
 export default function TeamSection() {
   const [botDirection, setBotDirection] = useState<'left' | 'right' | null>(null);
+  const { ref: sectionRef, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+    rootMargin: '200px 0px', // Load earlier when scrolling
+  });
+  const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden bg-gray-50 scroll-mt-20">
+    <section 
+      id="about" 
+      ref={sectionRef}
+      className="py-20 relative overflow-hidden bg-gray-50 scroll-mt-20"
+    >
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-white">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00dfff]/5 to-[#A855F7]/5 blur-3xl opacity-30" />
@@ -17,8 +42,8 @@ export default function TeamSection() {
         <motion.div 
           className="text-center mb-8 md:mb-16"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Über uns
@@ -68,9 +93,8 @@ export default function TeamSection() {
           <motion.div 
             className="mt-16 md:mt-20 max-w-3xl mx-auto text-center px-4"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ delay: 0.2, duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
           >
             <div className="relative">
               {/* Glow effect */}
@@ -78,10 +102,9 @@ export default function TeamSection() {
                 className="absolute -inset-[2px] rounded-2xl"
                 style={{
                   background: 'linear-gradient(to right, rgba(0, 207, 255, 0.3), rgba(162, 89, 255, 0.3))',
-                  boxShadow: `
-                    0 0 25px rgba(0, 207, 255, 0.3),
-                    0 0 50px rgba(162, 89, 255, 0.2)
-                  `,
+                  boxShadow: isMobile ? 
+                    '0 0 15px rgba(0, 207, 255, 0.2), 0 0 30px rgba(162, 89, 255, 0.1)' : 
+                    '0 0 25px rgba(0, 207, 255, 0.3), 0 0 50px rgba(162, 89, 255, 0.2)',
                 }}
               />
               

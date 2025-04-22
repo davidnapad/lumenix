@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,16 +29,16 @@ export default function Header() {
 
         window.scrollTo({
           top: offsetPosition,
-          behavior: 'smooth'
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
         });
       }
     }
-  }, [location]);
+  }, [location, prefersReducedMotion]);
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate('/');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
@@ -63,7 +64,7 @@ export default function Header() {
 
         window.scrollTo({
           top: offsetPosition,
-          behavior: 'smooth'
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
         });
       }
     }
@@ -75,16 +76,20 @@ export default function Header() {
     { href: "/#ueber-uns", text: "Über uns" }
   ];
 
+  const transitionConfig = {
+    duration: prefersReducedMotion ? 0.1 : 0.3
+  };
+
   return (
     <>
       {/* Desktop Logo and CTA */}
       <motion.div 
-        className="hidden md:block fixed w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 z-40"
+        className="hidden md:block fixed w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 z-40 will-change-transform"
         animate={{ 
           y: isScrolled ? -100 : 0,
           opacity: isScrolled ? 0 : 1
         }}
-        transition={{ duration: 0.3 }}
+        transition={transitionConfig}
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-20">
@@ -96,6 +101,9 @@ export default function Header() {
                 src="https://i.postimg.cc/VvGDNZ46/Lumenix-8.png" 
                 alt="Lumenix Media" 
                 className="h-12 w-auto"
+                loading="eager"
+                width={48}
+                height={48}
               />
               <span className="text-xl font-bold">Lumenix</span>
             </button>
@@ -109,11 +117,11 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-center h-16 md:h-20">
               <motion.div 
-                className="relative"
+                className="relative will-change-transform"
                 animate={{
                   y: isScrolled ? 20 : 0,
                 }}
-                transition={{ duration: 0.3 }}
+                transition={transitionConfig}
               >
                 <motion.div
                   className="absolute inset-0 -inset-x-4"
@@ -121,7 +129,7 @@ export default function Header() {
                   animate={{
                     opacity: isScrolled ? 1 : 0
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={transitionConfig}
                 >
                   <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-full" />
                   <div className="absolute inset-0 bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 rounded-full blur-2xl" />
@@ -148,13 +156,13 @@ export default function Header() {
 
       {/* Mobile Logo (Below Navigation) */}
       <motion.div 
-        className="fixed top-16 left-0 w-full md:hidden z-40"
+        className="fixed top-16 left-0 w-full md:hidden z-40 will-change-transform"
         initial={false}
         animate={{ 
           opacity: isScrolled ? 0 : 1,
           y: isScrolled ? -20 : 0
         }}
-        transition={{ duration: 0.3 }}
+        transition={transitionConfig}
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center h-16">
@@ -166,6 +174,9 @@ export default function Header() {
                 src="https://i.postimg.cc/VvGDNZ46/Lumenix-8.png" 
                 alt="Lumenix Media" 
                 className="h-8 w-auto"
+                loading="eager"
+                width={32}
+                height={32}
               />
               <span className="text-base font-bold">Lumenix</span>
             </button>
