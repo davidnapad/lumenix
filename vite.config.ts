@@ -6,7 +6,10 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Optimize React refresh
+      fastRefresh: true,
+    }),
     imagemin({
       gifsicle: {
         optimizationLevel: 7,
@@ -49,6 +52,10 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
     include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+    // Optimize dependency scanning
+    esbuildOptions: {
+      target: 'esnext',
+    },
   },
   resolve: {
     alias: {
@@ -58,10 +65,13 @@ export default defineConfig({
   build: {
     minify: 'terser',
     cssMinify: true,
+    // Improve chunk size warnings threshold
+    chunkSizeWarningLimit: 1200,
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
       },
     },
     rollupOptions: {
@@ -76,16 +86,41 @@ export default defineConfig({
           'page-calendar': ['./src/pages/CalendarPage.tsx'],
           'page-impressum': ['./src/pages/ImpressumPage.tsx'],
           'page-privacy': ['./src/pages/PrivacyPage.tsx'],
-        }
+        },
+        // Optimize chunk naming and asset organization
+        assetFileNames: 'assets/[name].[hash].[ext]',
+        chunkFileNames: 'chunks/[name].[hash].js',
+        entryFileNames: 'entries/[name].[hash].js',
       }
     },
     sourcemap: false,
-    chunkSizeWarningLimit: 1000,
   },
   server: {
     // Optimize dev server
     hmr: {
       overlay: false, // Disable the HMR overlay to save resources
     },
-  }
+    // Optimize vite server settings
+    fs: {
+      strict: true,
+    },
+    // Improved watch settings
+    watch: {
+      usePolling: false,
+      interval: 1000,
+    },
+  },
+  // Enable CSS code splitting
+  css: {
+    devSourcemap: false,
+  },
+  // Add prefetch for better page navigation
+  experimental: {
+    renderBuiltUrl(filename) {
+      if (filename.endsWith('.js')) {
+        return { relative: true, prepend: '', attributes: { prefetch: true } };
+      }
+      return { relative: true };
+    }
+  },
 });

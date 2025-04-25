@@ -32,6 +32,25 @@ html {
   will-change: opacity;
 }
 
+/* Optimize scrolling performance */
+body {
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Content visibility auto for offscreen content */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Prevent image layout shifts */
+img {
+  height: auto;
+  max-width: 100%;
+}
+
 /* Disable animation based on preference */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -179,5 +198,79 @@ html {
   /* Reduce opacity of decorative elements */
   .from-[#00dfff]/5, .to-[#A855F7]/5 {
     opacity: 0.3 !important;
+  }
+}
+
+/* Animation optimizations */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes aurora {
+  from { background-position: 50% 50%, 50% 50%; }
+  to { background-position: 350% 50%, 350% 50%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1) rotate(180deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-aurora {
+  animation: aurora 15s linear infinite;
+  transform: translateZ(0);
+}
+
+.animate-gradient {
+  animation: gradient 10s ease infinite;
+  transform: translateZ(0);
+}
+
+.animate-pulse {
+  animation: pulse 3s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+/* Optimize compositing */
+.optimize-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Prevent reflows during scrolling */
+.prevent-reflow {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Font loading optimization */
+@supports (font-display: swap) {
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
   }
 }

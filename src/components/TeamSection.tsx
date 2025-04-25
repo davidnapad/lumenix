@@ -9,7 +9,7 @@ export default function TeamSection() {
   const { ref: sectionRef, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
-    rootMargin: '200px 0px', // Load earlier when scrolling
+    rootMargin: '300px 0px', // Load earlier when scrolling
   });
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
@@ -20,10 +20,19 @@ export default function TeamSection() {
     };
     
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    
+    // Debounce resize event for better performance
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkMobile, 150);
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -31,7 +40,7 @@ export default function TeamSection() {
     <section 
       id="about" 
       ref={sectionRef}
-      className="py-20 relative overflow-hidden bg-gray-50 scroll-mt-20"
+      className="py-20 relative overflow-hidden bg-gray-50 scroll-mt-20 content-visibility-auto"
     >
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-white">
@@ -109,7 +118,7 @@ export default function TeamSection() {
               />
               
               {/* Content container */}
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-lg border border-white/20">
+              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-lg border border-white/20 prevent-reflow">
                 <div className="text-gray-700 text-lg md:text-xl leading-[1.8] space-y-8">
                   <p>
                     <strong>Wir sind David und Daniel</strong> – seit über 8 Jahren ein eingespieltes Team.

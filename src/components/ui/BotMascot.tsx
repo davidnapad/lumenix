@@ -13,10 +13,10 @@ export function BotMascot({ direction }: BotMascotProps) {
 
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center p-4 md:p-6"
+      className="flex flex-col items-center justify-center p-4 md:p-6 optimize-gpu"
       initial={{ opacity: 0, scale: 0.5 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "100px 0px" }}
       transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
     >
       <motion.div 

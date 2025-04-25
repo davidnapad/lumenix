@@ -7,7 +7,7 @@ export default function CalendlyBooking() {
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
-    rootMargin: '200px 0px', // Load earlier when scrolling
+    rootMargin: '300px 0px', // Increased to load even earlier
   });
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export default function CalendlyBooking() {
       calendarLoaded.current = true;
     };
 
-    // Delay loading the calendar
-    const timer = setTimeout(loadCalendar, 2000);
+    // Strategic delay - don't compete with other resource loading
+    const timer = setTimeout(loadCalendar, 2500);
     
     return () => {
       clearTimeout(timer);
@@ -80,7 +80,7 @@ export default function CalendlyBooking() {
   }, [inView]);
 
   return (
-    <section ref={ref} id="calendly" className="py-16 px-6 bg-gray-50">
+    <section ref={ref} id="calendly" className="py-16 px-6 bg-gray-50 content-visibility-auto">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold mb-4">📅 Termin vereinbaren</h2>
         <p className="mb-8 text-gray-700">
@@ -103,9 +103,11 @@ export default function CalendlyBooking() {
           
           {/* Calendar wrapper */}
           <div 
-            className="relative bg-white rounded-2xl overflow-hidden will-change-transform"
+            className="relative bg-white rounded-2xl overflow-hidden will-change-transform optimize-gpu"
             style={{
-              height: '750px'
+              height: '750px',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
             }}
           >
             {!inView && (
@@ -119,7 +121,14 @@ export default function CalendlyBooking() {
             <div 
               id="my-cal-inline-home" 
               className={`w-full h-full ${!inView ? 'invisible' : 'visible'}`}
-              style={{ width: '100%', height: '100%', overflow: 'scroll', willChange: 'transform' }}
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                overflow: 'scroll', 
+                willChange: 'transform',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden'
+              }}
             />
           </div>
         </div>

@@ -29,6 +29,7 @@ export default function ChatWidget() {
       script.src = "https://www.chatbase.co/embed.min.js";
       script.setAttribute('chatbotId', 'dein-bot-id'); // Replace with your actual chatbot ID
       script.defer = true;
+      script.async = true; // Make it async for better performance
       
       // Handle script load error
       script.onerror = () => {
@@ -40,11 +41,19 @@ export default function ChatWidget() {
       scriptLoaded.current = true;
     };
 
-    // Delay loading the chat widget even more to prioritize core content
-    const timer = setTimeout(loadChatWidget, 5000);
+    // Prioritize main page loading by delaying chat widget
+    // Use requestIdleCallback if available for better performance
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        setTimeout(loadChatWidget, 5000);
+      }, { timeout: 10000 });
+    } else {
+      // Fallback to setTimeout
+      const timer = setTimeout(loadChatWidget, 7000);
+      return () => clearTimeout(timer);
+    }
 
     return () => {
-      clearTimeout(timer);
       if (scriptLoaded.current) {
         const script = document.querySelector('script[src="https://www.chatbase.co/embed.min.js"]');
         if (script && document.body.contains(script)) {

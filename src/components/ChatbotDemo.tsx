@@ -105,26 +105,13 @@ export default function ChatbotDemo() {
     };
   }, [inView, chatLoaded]);
 
-  // Animation variants with reduced motion for mobile
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.5,
-        staggerChildren: 0.1 
-      }
-    }
-  };
-
-  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Simplified animation for performance on mobile
+  // Check for reduced motion and mobile devices
+  const isReducedMotion = typeof window !== 'undefined' && 
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
-    <section ref={ref} className="py-20 bg-gray-50 overflow-hidden">
+    <section ref={ref} className="py-20 bg-gray-50 overflow-hidden content-visibility-auto">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-16">🤖 Erlebe KI-Chatbots in Aktion</h2>
         
@@ -132,7 +119,7 @@ export default function ChatbotDemo() {
           {/* Chatbot Demo Box */}
           <div className="relative">
             <motion.div 
-              className="relative bg-white rounded-2xl h-[600px] overflow-hidden"
+              className="relative bg-white rounded-2xl h-[600px] overflow-hidden optimize-gpu prevent-reflow"
               initial={{ opacity: 0, y: isReducedMotion || isMobile ? 0 : 20 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: isReducedMotion || isMobile ? 0 : 20 }}
               transition={{ duration: isReducedMotion || isMobile ? 0.3 : 0.6 }}
@@ -202,7 +189,7 @@ export default function ChatbotDemo() {
                   onClick={() => setSelectedFeature(null)}
                 >
                   <motion.div
-                    className="bg-white rounded-2xl p-8 max-w-lg w-full relative overflow-hidden"
+                    className="bg-white rounded-2xl p-8 max-w-lg w-full relative overflow-hidden optimize-gpu"
                     onClick={e => e.stopPropagation()}
                     layoutId={isReducedMotion || isMobile ? undefined : `feature-${selectedFeature.title}`}
                   >
@@ -239,18 +226,13 @@ export default function ChatbotDemo() {
               )}
             </AnimatePresence>
             
-            <motion.div 
-              className="grid grid-cols-2 gap-4"
-              variants={isReducedMotion || isMobile ? {} : containerVariants}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-            >
+            <div className="grid grid-cols-2 gap-4">
               {features.map((feature, index) => (
                 <motion.button
                   key={index}
                   layoutId={isReducedMotion || isMobile ? undefined : `feature-${feature.title}`}
                   onClick={() => setSelectedFeature(feature)}
-                  className={`bg-white p-6 rounded-xl text-center transition-all flex flex-col items-center relative overflow-hidden hover:shadow-lg ${
+                  className={`bg-white p-6 rounded-xl text-center transition-all flex flex-col items-center relative overflow-hidden hover:shadow-lg optimize-gpu ${
                     feature.hasNumbers ? 'bg-gradient-to-r from-[#00dfff]/5 to-[#A855F7]/5' : ''
                   }`}
                   initial={{ opacity: 0, y: isReducedMotion || isMobile ? 10 : 20 }}
@@ -260,6 +242,10 @@ export default function ChatbotDemo() {
                     duration: isReducedMotion || isMobile ? 0.2 : 0.5
                   }}
                   whileHover={isReducedMotion || isMobile ? {} : { y: -5 }}
+                  style={{
+                    transform: 'translateZ(0)', // Force GPU acceleration
+                    backfaceVisibility: 'hidden'
+                  }}
                 >
                   <div className="p-3 bg-gradient-to-r from-accent-blue/10 to-accent-purple/10 rounded-xl mb-4">
                     <GradientIcon icon={feature.icon} className="h-6 w-6" />
@@ -267,7 +253,7 @@ export default function ChatbotDemo() {
                   <h4 className="font-medium text-lg">{feature.title}</h4>
                 </motion.button>
               ))}
-            </motion.div>
+            </div>
 
             {!selectedFeature && (
               <motion.p 

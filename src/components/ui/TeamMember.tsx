@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
@@ -20,17 +20,49 @@ export function TeamMember({
   className 
 }: TeamMemberProps) {
   const prefersReducedMotion = useReducedMotion();
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    
+    // Debounced resize listener
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkMobile, 100);
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+    
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Preload image
+  useEffect(() => {
+    if (image) {
+      const img = new Image();
+      img.src = image;
+      img.onload = () => setImageLoaded(true);
+    }
+  }, [image]);
 
   return (
     <motion.div 
       className={cn(
-        "flex flex-col items-center p-4 md:p-8 rounded-2xl bg-white shadow-lg border border-gray-100 h-full will-change-transform",
+        "flex flex-col items-center p-4 md:p-8 rounded-2xl bg-white shadow-lg border border-gray-100 h-full optimize-gpu",
         className
       )}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "100px 0px" }}
       transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
     >
       <motion.div 
@@ -41,19 +73,28 @@ export function TeamMember({
         {/* Simplified glow effect for mobile */}
         <div className={`absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff] to-[#A855F7] ${isMobile ? 'blur-md' : 'blur-xl'} opacity-30 group-hover:opacity-50 transition-opacity`} />
         
-        {/* Image with loading optimization */}
+        {/* Image placeholder until loaded */}
         <div className="relative w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-[#00dfff]/20">
           {image && (
-            <img
-              src={image}
-              alt={name}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-              fetchpriority="low"
-              width={isMobile ? 80 : 128}
-              height={isMobile ? 80 : 128}
-            />
+            <>
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-full"></div>
+              )}
+              <img
+                src={image}
+                alt={name}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                width={isMobile ? 80 : 128}
+                height={isMobile ? 80 : 128}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setImageLoaded(true)}
+                style={{
+                  transform: 'translateZ(0)',
+                  willChange: 'transform'
+                }}
+              />
+            </>
           )}
         </div>
       </motion.div>
