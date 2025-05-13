@@ -67,7 +67,7 @@ export default function ChatbotDemo() {
     const loadChat = () => {
       if (!window.VG_CONFIG) {
         window.VG_CONFIG = {
-          ID: "nwlu6sn9k65owx2u",
+          ID: "sb24t3UQEoFWjVBgv0Hf",
           region: 'eu',
           render: 'full-width',
           stylesheets: [
