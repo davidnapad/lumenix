@@ -21,7 +21,7 @@ export function AccordionItem({ question, answer, isOpen, onToggle }: AccordionI
         className="flex justify-between items-center w-full py-4 text-left"
         onClick={onToggle}
       >
-        <span className="text-lg font-semibold">{question}</span>
+        <span className="text-lg font-semibold bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent">{question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: prefersReducedMotion ? 0.1 : 0.2 }}
@@ -56,10 +56,11 @@ interface AccordionProps {
 }
 
 export function Accordion({ items }: AccordionProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // Set first item open by default
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="divide-y divide-gray-200 rounded-lg bg-white">
+    <div className="divide-y divide-gray-200 rounded-lg bg-white shadow-md p-6">
       {items.map((item, index) => (
         <AccordionItem
           key={index}

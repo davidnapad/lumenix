@@ -18,9 +18,123 @@
   --border: 214.3 31.8% 91.4%;
 }
 
+@layer base {
+  @property --pos-x {
+    syntax: '<percentage>';
+    initial-value: 50%;
+    inherits: false;
+  }
+
+  @property --pos-y {
+    syntax: '<percentage>';
+    initial-value: 50%;
+    inherits: false;
+  }
+
+  @property --spread-x {
+    syntax: '<percentage>';
+    initial-value: 100%;
+    inherits: false;
+  }
+
+  @property --spread-y {
+    syntax: '<percentage>';
+    initial-value: 100%;
+    inherits: false;
+  }
+
+  @property --color-1 {
+    syntax: '<color>';
+    initial-value: var(--accent-blue);
+    inherits: false;
+  }
+
+  @property --color-2 {
+    syntax: '<color>';
+    initial-value: var(--accent-purple);
+    inherits: false;
+  }
+
+  @property --color-3 {
+    syntax: '<color>';
+    initial-value: var(--accent-purple);
+    inherits: false;
+  }
+
+  @property --color-4 {
+    syntax: '<color>';
+    initial-value: var(--accent-blue);
+    inherits: false;
+  }
+
+  @property --color-5 {
+    syntax: '<color>';
+    initial-value: var(--accent-purple);
+    inherits: false;
+  }
+
+  @property --border-angle {
+    syntax: '<angle>';
+    initial-value: 90deg;
+    inherits: true;
+  }
+
+  @property --border-color-1 {
+    syntax: '<color>';
+    initial-value: hsla(193, 100%, 80%, 0.4);
+    inherits: true;
+  }
+
+  @property --border-color-2 {
+    syntax: '<color>';
+    initial-value: hsla(270, 90%, 75%, 0.6);
+    inherits: true;
+  }
+
+  @property --stop-1 {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: false;
+  }
+
+  @property --stop-2 {
+    syntax: '<percentage>';
+    initial-value: 40%;
+    inherits: false;
+  }
+
+  @property --stop-3 {
+    syntax: '<percentage>';
+    initial-value: 60%;
+    inherits: false;
+  }
+
+  @property --stop-4 {
+    syntax: '<percentage>';
+    initial-value: 80%;
+    inherits: false;
+  }
+
+  @property --stop-5 {
+    syntax: '<percentage>';
+    initial-value: 100%;
+    inherits: false;
+  }
+}
+
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 120px; /* Increased to account for the fixed header */
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
 }
 
 /* Add will-change for smoother animations */
@@ -32,11 +146,20 @@ html {
   will-change: opacity;
 }
 
+.translate-z-0 {
+  transform: translateZ(0);
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
 /* Optimize scrolling performance */
 body {
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Content visibility auto for offscreen content */
@@ -49,6 +172,20 @@ body {
 img {
   height: auto;
   max-width: 100%;
+}
+
+/* Force hardware acceleration for smoother animations */
+.optimize-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Ensure smooth gradients and borders across browsers */
+.gradient-border {
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
 }
 
 /* Disable animation based on preference */
@@ -67,21 +204,239 @@ img {
 
 @layer components {
   .gradient-button {
-    background: linear-gradient(92.88deg, rgb(69, 94, 181) 9.16%, rgb(86, 67, 204) 43.89%, rgb(103, 63, 215) 64.72%);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative appearance-none cursor-pointer;
+    background: linear-gradient(
+      to right,
+      var(--accent-blue),
+      var(--accent-purple)
+    );
+    transition:
+      --pos-x 0.5s,
+      --pos-y 0.5s,
+      --spread-x 0.5s,
+      --spread-y 0.5s,
+      --color-1 0.5s,
+      --color-2 0.5s,
+      --color-3 0.5s,
+      --color-4 0.5s,
+      --color-5 0.5s,
+      --border-angle 0.5s,
+      --border-color-1 0.5s,
+      --border-color-2 0.5s,
+      --stop-1 0.5s,
+      --stop-2 0.5s,
+      --stop-3 0.5s,
+      --stop-4 0.5s,
+      --stop-5 0.5s;
   }
-  
+
+  .gradient-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      var(--border-angle),
+      var(--border-color-1),
+      var(--border-color-2)
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   .gradient-button:hover {
-    box-shadow: rgba(80, 63, 205, 0.5) 0px 1px 40px;
-    transform: translateY(-1px);
+    background: radial-gradient(
+      var(--spread-x) var(--spread-y) at var(--pos-x) var(--pos-y),
+      var(--color-1) var(--stop-1),
+      var(--color-2) var(--stop-2),
+      var(--color-3) var(--stop-3),
+      var(--color-4) var(--stop-4),
+      var(--color-5) var(--stop-5)
+    );
+    --pos-x: 0%;
+    --pos-y: 50%;
+    --spread-x: 150%;
+    --spread-y: 150%;
+    --color-1: var(--accent-blue);
+    --color-2: var(--accent-purple);
+    --color-3: var(--accent-purple);
+    --color-4: var(--accent-blue);
+    --color-5: var(--accent-purple);
+    --border-angle: 45deg;
+    --border-color-1: hsla(193, 100%, 90%, 0.4);
+    --border-color-2: hsla(270, 90%, 90%, 0.8);
+    --stop-1: 0%;
+    --stop-2: 30%;
+    --stop-3: 60%;
+    --stop-4: 80%;
+    --stop-5: 100%;
+    transform: translateY(-2px);
   }
-  
+
   .gradient-button-variant {
-    background: linear-gradient(92.88deg, rgb(45, 157, 247) 9.16%, rgb(40, 142, 222) 43.89%, rgb(35, 127, 197) 64.72%);
+    --color-1: var(--accent-blue);
+    --color-2: var(--accent-purple);
+    --color-3: var(--accent-purple);
+    --color-4: var(--accent-blue);
+    --color-5: var(--accent-purple);
+    --border-angle: 200deg;
+    --border-color-1: hsla(193, 100%, 90%, 0.6);
+    --border-color-2: hsla(270, 90%, 90%, 0.15);
+  }
+
+  .gradient-button-variant:hover {
+    --pos-x: 0%;
+    --pos-y: 95.51%;
+    --spread-x: 110.24%;
+    --spread-y: 110.2%;
+    --color-1: var(--accent-blue);
+    --color-2: var(--accent-purple);
+    --color-3: var(--accent-purple);
+    --color-4: var(--accent-blue);
+    --color-5: var(--accent-purple);
+    --stop-1: 0%;
+    --stop-2: 10%;
+    --stop-3: 35.44%;
+    --stop-4: 71.34%;
+    --stop-5: 90.76%;
+    --border-angle: 210deg;
+    --border-color-1: hsla(193, 100%, 90%, 0.2);
+    --border-color-2: hsla(270, 90%, 90%, 0.75);
   }
   
-  .gradient-button-variant:hover {
-    box-shadow: rgba(35, 127, 197, 0.5) 0px 1px 40px;
+  .glass-arrow {
+    position: relative;
+    animation: bounce-arrow 2s infinite;
+  }
+  
+  @keyframes bounce-arrow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+/* Animation optimizations */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes aurora {
+  from { background-position: 50% 50%, 50% 50%; }
+  to { background-position: 350% 50%, 350% 50%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1) rotate(180deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-aurora {
+  animation: aurora 15s linear infinite;
+  transform: translateZ(0);
+}
+
+.animate-gradient {
+  animation: gradient 10s ease infinite;
+  transform: translateZ(0);
+}
+
+.animate-pulse {
+  animation: pulse 3s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-in-out infinite;
+  transform: translateZ(0);
+}
+
+.animate-glow-border {
+  animation: glow-border 10s linear infinite;
+  transform: translateZ(0);
+}
+
+/* New animation class for button shimmer */
+.animate-button-shimmer {
+  animation: button-shimmer 4s linear infinite;
+  transform: translateZ(0);
+}
+
+/* Fixed header positioning fixes */
+.fixed.w-full.z-50 {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+  isolation: isolate;
+}
+
+/* Optimize compositing */
+.optimize-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Prevent reflows during scrolling */
+.prevent-reflow {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: paint;
+}
+
+/* Fixed header enhancements */
+.fixed.w-full.z-50 {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 9999 !important;
+  transform: translateZ(0) !important;
+}
+
+/* Smooth scroll transitions for all anchor links */
+a[href^="#"], 
+button[data-scroll] {
+  transition: color 0.3s ease;
+}
+
+/* Improved NavBar active item indicators */
+.tubelight-indicator {
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+}
+
+/* Font loading optimization */
+@supports (font-display: swap) {
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
   }
 }
 
@@ -176,9 +531,37 @@ img {
     font-size: 12px !important;
     margin-top: 12px !important;
   }
+  
+  /* Custom mobile navigation styles - removed gradient indicator */
+  @media (max-width: 767px) {
+    /* Active state styles for mobile nav - simplified */
+    .mobile-nav-active {
+      position: relative;
+    }
+  }
+  
+  /* Glassmorphism effects */
+  .glassmorphism {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1.5px solid transparent;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+      linear-gradient(to right, #00dfff, #A855F7);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.3s ease;
+  }
+  
+  .glassmorphism:hover {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
 }
 
-/* Performance optimizations */
+/* Mobile Optimizations */
 @media (max-width: 768px) {
   /* Reduce animation complexity on mobile */
   .animate-aurora {
@@ -196,81 +579,142 @@ img {
   }
   
   /* Reduce opacity of decorative elements */
-  .from-[#00dfff]/5, .to-[#A855F7]/5 {
+  .from-\[#00dfff\]\/5, .to-\[#A855F7\]\/5 {
     opacity: 0.3 !important;
   }
-}
-
-/* Animation optimizations */
-@keyframes gradient {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes aurora {
-  from { background-position: 50% 50%, 50% 50%; }
-  to { background-position: 350% 50%, 350% 50%; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes sparkle {
-  0% { transform: scale(0) rotate(0deg); opacity: 0; }
-  50% { transform: scale(1) rotate(180deg); opacity: 0.8; }
-  100% { transform: scale(0) rotate(360deg); opacity: 0; }
-}
-
-@keyframes shine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-aurora {
-  animation: aurora 15s linear infinite;
-  transform: translateZ(0);
-}
-
-.animate-gradient {
-  animation: gradient 10s ease infinite;
-  transform: translateZ(0);
-}
-
-.animate-pulse {
-  animation: pulse 3s ease-in-out infinite;
-  transform: translateZ(0);
-}
-
-.animate-sparkle {
-  animation: sparkle 2s ease-in-out infinite;
-  transform: translateZ(0);
-}
-
-.animate-shine {
-  animation: shine 1.5s ease-in-out infinite;
-  transform: translateZ(0);
-}
-
-/* Optimize compositing */
-.optimize-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Prevent reflows during scrolling */
-.prevent-reflow {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Font loading optimization */
-@supports (font-display: swap) {
-  @font-face {
-    font-family: 'Inter';
-    font-display: swap;
+  
+  /* Optimize font rendering */
+  h1, h2, h3 {
+    text-rendering: optimizeSpeed !important;
   }
+  
+  /* Better touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Make images less memory intensive */
+  img {
+    content-visibility: auto;
+  }
+  
+  /* Optimize content rendering */
+  .py-16, .py-20, .py-24 {
+    contain: content;
+  }
+  
+  /* Fix card issues */
+  .rounded-xl {
+    overflow: visible;
+  }
+  
+  /* Ensure text doesn't overflow */
+  p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  /* Prevent fixed height issues */
+  .h-\[280px\], .h-\[250px\], .h-\[240px\] {
+    height: auto !important;
+    min-height: 200px !important;
+  }
+  
+  /* Optimize video containers for mobile */
+  .aspect-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  
+  /* YouTube iframe optimizations */
+  iframe[src*="youtube.com"] {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    border: none !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  /* Minimize initial layout shift for videos */
+  .relative.aspect-video {
+    contain: strict;
+  }
+}
+
+/* High performance animations */
+@media (prefers-reduced-motion: no-preference) {
+  .high-performance-transform {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
+
+/* YouTube embed lite mode - reduces initial load impact */
+.youtube-lite-mode {
+  background-color: #000;
+  position: relative;
+  display: block;
+  contain: content;
+  background-position: center center;
+  background-size: cover;
+  cursor: pointer;
+}
+
+/* Optimized play button for lite mode */
+.youtube-lite-mode::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
+  background-position: top;
+  background-repeat: repeat-x;
+  height: 60px;
+  padding-bottom: 50px;
+  width: 100%;
+  transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Play button appearance for lite mode */
+.youtube-lite-mode::after {
+  content: "";
+  display: block;
+  padding-bottom: 56.25%;
+}
+
+/* Play button icon for lite mode */
+.youtube-lite-mode > div {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  background-color: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.2s;
+}
+
+.youtube-lite-mode > div::before {
+  content: "";
+  border-style: solid;
+  border-width: 15px 0 15px 26px;
+  border-color: transparent transparent transparent white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+}
+
+.youtube-lite-mode:hover > div {
+  background-color: rgba(0,0,0,0.8);
 }

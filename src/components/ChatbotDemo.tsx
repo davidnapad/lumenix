@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Magnet, MessageSquare, Clock, Plug, MessageCircle, TrendingUp } from 'lucide-react';
-import { GradientIcon } from './ui/GradientIcon';
+import { motion, useReducedMotion } from 'framer-motion';
+import { MessageSquare, Clock, Plug, MessageCircle, TrendingUp } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
+import { GradientIcon } from './ui/GradientIcon';
 
 interface Feature {
-  icon: typeof Magnet;
+  icon: React.ElementType;
   title: string;
   description: string;
   hasNumbers?: boolean;
@@ -13,7 +13,7 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    icon: Magnet,
+    icon: Clock,
     title: "🧲 +63% Conversionrate",
     description: "Führt mehr Besucher zur Aktion – automatisch.",
     hasNumbers: true
@@ -21,12 +21,12 @@ const features: Feature[] = [
   {
     icon: MessageCircle,
     title: "🗣️ Spricht wie ein Mensch",
-    description: "Natürlich, sympathisch – kein Bot-Feeling."
+    description: "Natürlich, sympathisch – kein Bot-Feeling.",
   },
   {
     icon: Plug,
     title: "🔌 Nahtlos integrierbar",
-    description: "Funktioniert mit deinen Tools – direkt startklar."
+    description: "Funktioniert mit deinen Tools – direkt startklar.",
   },
   {
     icon: Clock,
@@ -43,12 +43,11 @@ const features: Feature[] = [
   {
     icon: TrendingUp,
     title: "📈 Lernt mit jeder Anfrage",
-    description: "Wird smarter durch echte Kundengespräche."
+    description: "Wird smarter durch echte Kundengespräche.",
   }
 ];
 
 export default function ChatbotDemo() {
-  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [chatLoaded, setChatLoaded] = useState(false);
@@ -111,15 +110,15 @@ export default function ChatbotDemo() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
-    <section ref={ref} className="py-20 bg-gray-50 overflow-hidden content-visibility-auto">
+    <section ref={ref} className="py-16 md:py-20 bg-gray-50 overflow-hidden content-visibility-auto">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-16">🤖 Erlebe KI-Chatbots in Aktion</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-10 md:mb-16">Erlebe KI-Chatbots in Aktion</h2>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Chatbot Demo Box */}
           <div className="relative">
             <motion.div 
-              className="relative bg-white rounded-2xl h-[600px] overflow-hidden optimize-gpu prevent-reflow"
+              className="relative bg-white rounded-2xl h-[500px] md:h-[600px] overflow-hidden optimize-gpu prevent-reflow"
               initial={{ opacity: 0, y: isReducedMotion || isMobile ? 0 : 20 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: isReducedMotion || isMobile ? 0 : 20 }}
               transition={{ duration: isReducedMotion || isMobile ? 0.3 : 0.6 }}
@@ -130,7 +129,9 @@ export default function ChatbotDemo() {
                   inset 0 0 80px 0 rgba(168, 85, 247, 0.1),
                   0 0 20px 0 rgba(0, 223, 255, 0.2),
                   0 0 40px 0 rgba(168, 85, 247, 0.2)
-                `
+                `,
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden'
               }}
             >
               {/* Subtle gradient overlay */}
@@ -139,9 +140,89 @@ export default function ChatbotDemo() {
               {/* TIXAE Chatbot container */}
               <div className="absolute inset-0 flex items-center justify-center">
                 {isLoading && inView && (
-                  <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-accent-blue border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p className="text-gray-600">Loading chat widget...</p>
+                  <div className="flex flex-col items-center justify-center w-full h-full p-6">
+                    {/* Branded chatbot placeholder */}
+                    <div className="relative mb-6">
+                      {/* Glow effect behind logo */}
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff]/30 to-[#A855F7]/30 blur-xl"></div>
+                      
+                      {/* Logo */}
+                      <img 
+                        src="https://i.postimg.cc/VvGDNZ46/Lumenix-8.png" 
+                        alt="Lumenix Chatbot" 
+                        className="relative w-16 md:w-20 h-16 md:h-20 object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                    
+                    {/* Branded title */}
+                    <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent">
+                      Lumenix Chatbot
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-gray-600 mb-4 text-center max-w-xs">
+                      Dein KI-Assistent für schnelle und effiziente Kommunikation.
+                    </p>
+                    
+                    {/* Message bubbles to simulate conversation */}
+                    <div className="w-full max-w-sm space-y-3">
+                      <div className="flex justify-end">
+                        <div className="bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 px-4 py-2 rounded-xl rounded-tr-none text-gray-700 text-sm">
+                          Wie kann ein Chatbot mein Business unterstützen?
+                        </div>
+                      </div>
+                      
+                      <motion.div 
+                        className="flex justify-start"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <div className="bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 px-4 py-2 rounded-xl rounded-tl-none text-gray-700 text-sm">
+                          Chatbots können dein Team entlasten, 24/7 Support bieten und Leads qualifizieren.
+                        </div>
+                      </motion.div>
+                    </div>
+                    
+                    {/* Subtle loading indicator */}
+                    <div className="mt-8 flex items-center">
+                      <motion.div 
+                        className="w-2 h-2 rounded-full bg-[#00dfff] mx-1"
+                        animate={{ 
+                          opacity: [0.3, 1, 0.3],
+                          scale: [0.8, 1, 0.8]
+                        }}
+                        transition={{ 
+                          repeat: Infinity,
+                          duration: 1.5,
+                        }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 rounded-full bg-gradient-to-r from-[#00dfff] to-[#A855F7] mx-1"
+                        animate={{ 
+                          opacity: [0.3, 1, 0.3],
+                          scale: [0.8, 1, 0.8]
+                        }}
+                        transition={{ 
+                          repeat: Infinity,
+                          duration: 1.5,
+                          delay: 0.5
+                        }}
+                      />
+                      <motion.div 
+                        className="w-2 h-2 rounded-full bg-[#A855F7] mx-1"
+                        animate={{ 
+                          opacity: [0.3, 1, 0.3],
+                          scale: [0.8, 1, 0.8]
+                        }}
+                        transition={{ 
+                          repeat: Infinity,
+                          duration: 1.5,
+                          delay: 1
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
                 
@@ -169,70 +250,19 @@ export default function ChatbotDemo() {
           {/* Features */}
           <div className="relative">
             <motion.h3 
-              className="text-2xl font-bold mb-6 bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-transparent"
+              className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-transparent"
               initial={{ opacity: 0, y: isReducedMotion || isMobile ? 0 : -20 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: isReducedMotion || isMobile ? 0 : -20 }}
               transition={{ duration: isReducedMotion || isMobile ? 0.3 : 0.6 }}
             >
               Was kann der KI-Chatbot für dich tun?
             </motion.h3>
-
-            {/* Feature Description Modal */}
-            <AnimatePresence>
-              {selectedFeature && (
-                <motion.div
-                  initial={{ opacity: 0, scale: isReducedMotion || isMobile ? 0.95 : 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: isReducedMotion || isMobile ? 0.95 : 0.9 }}
-                  transition={{ duration: isReducedMotion || isMobile ? 0.2 : 0.3 }}
-                  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-                  onClick={() => setSelectedFeature(null)}
-                >
-                  <motion.div
-                    className="bg-white rounded-2xl p-8 max-w-lg w-full relative overflow-hidden optimize-gpu"
-                    onClick={e => e.stopPropagation()}
-                    layoutId={isReducedMotion || isMobile ? undefined : `feature-${selectedFeature.title}`}
-                  >
-                    {/* Decorative elements */}
-                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-accent-blue rounded-full blur-3xl opacity-10"></div>
-                    <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-accent-purple rounded-full blur-3xl opacity-10"></div>
-                    
-                    <div className="relative">
-                      <motion.div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-gradient-to-r from-accent-blue to-accent-purple rounded-xl">
-                          <GradientIcon icon={selectedFeature.icon} className="h-8 w-8 text-white" />
-                        </div>
-                        <h4 className="text-2xl font-bold">{selectedFeature.title}</h4>
-                      </motion.div>
-                      
-                      <motion.p 
-                        className="text-lg text-gray-700 leading-relaxed"
-                        initial={{ opacity: 0, y: isReducedMotion || isMobile ? 10 : 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1, duration: isReducedMotion || isMobile ? 0.2 : 0.3 }}
-                      >
-                        {selectedFeature.description}
-                      </motion.p>
-                      
-                      <motion.button
-                        className="mt-8 text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                        onClick={() => setSelectedFeature(null)}
-                      >
-                        ← Zurück zur Übersicht
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               {features.map((feature, index) => (
-                <motion.button
+                <motion.div
                   key={index}
-                  layoutId={isReducedMotion || isMobile ? undefined : `feature-${feature.title}`}
-                  onClick={() => setSelectedFeature(feature)}
-                  className={`bg-white p-6 rounded-xl text-center transition-all flex flex-col items-center relative overflow-hidden hover:shadow-lg optimize-gpu ${
+                  className={`bg-white p-4 md:p-6 rounded-xl text-center transition-all flex flex-col items-center relative overflow-visible ${
                     feature.hasNumbers ? 'bg-gradient-to-r from-[#00dfff]/5 to-[#A855F7]/5' : ''
                   }`}
                   initial={{ opacity: 0, y: isReducedMotion || isMobile ? 10 : 20 }}
@@ -241,30 +271,29 @@ export default function ChatbotDemo() {
                     delay: isReducedMotion || isMobile ? 0.1 : index * 0.05,
                     duration: isReducedMotion || isMobile ? 0.2 : 0.5
                   }}
-                  whileHover={isReducedMotion || isMobile ? {} : { y: -5 }}
                   style={{
-                    transform: 'translateZ(0)', // Force GPU acceleration
-                    backfaceVisibility: 'hidden'
+                    transform: 'translateZ(0)', 
+                    backfaceVisibility: 'hidden',
+                    cursor: 'default'
                   }}
                 >
-                  <div className="p-3 bg-gradient-to-r from-accent-blue/10 to-accent-purple/10 rounded-xl mb-4">
-                    <GradientIcon icon={feature.icon} className="h-6 w-6" />
+                  <div className="p-3 bg-gradient-to-r from-accent-blue/10 to-accent-purple/10 rounded-xl mb-3 md:mb-4">
+                    <GradientIcon icon={feature.icon} className="h-5 w-5 md:h-6 md:w-6" />
                   </div>
-                  <h4 className="font-medium text-lg">{feature.title}</h4>
-                </motion.button>
+                  <h4 className="font-medium text-sm md:text-base mb-1 md:mb-2">{feature.title}</h4>
+                  <p className="text-xs md:text-sm text-gray-600 break-words whitespace-normal">{feature.description}</p>
+                </motion.div>
               ))}
             </div>
 
-            {!selectedFeature && (
-              <motion.p 
-                className="text-center text-gray-600 mt-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: isReducedMotion || isMobile ? 0.2 : 0.3 }}
-              >
-                ℹ️ Klicke auf eine Funktion für mehr Details
-              </motion.p>
-            )}
+            <motion.p 
+              className="text-center text-gray-600 mt-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: isReducedMotion || isMobile ? 0.2 : 0.3 }}
+            >
+              ℹ️ Alle Funktionen auf einen Blick
+            </motion.p>
           </div>
         </div>
       </div>

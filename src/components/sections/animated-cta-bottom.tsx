@@ -1,16 +1,14 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import AnimatedWordCycle from '../ui/animated-text-cycle';
-import { Button as MovingBorderButton } from '../ui/moving-border';
+import { GradientButton } from '../shared/GradientButton';
 
 export default function AnimatedCtaBottom() {
   const prefersReducedMotion = useReducedMotion();
   
   return (
     <motion.section 
-      className="w-full py-20 bg-white"
+      className="w-full py-16 md:py-20 bg-white"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -18,7 +16,7 @@ export default function AnimatedCtaBottom() {
     >
       <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.h2 
-          className="text-3xl md:text-5xl font-light text-gray-900 leading-tight"
+          className="text-2xl md:text-4xl lg:text-5xl font-light text-gray-900 leading-tight text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -41,7 +39,7 @@ export default function AnimatedCtaBottom() {
         </motion.h2>
         
         <motion.p 
-          className="mt-6 text-lg text-gray-600"
+          className="mt-4 md:mt-6 text-base md:text-lg text-gray-600 text-center mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -50,23 +48,17 @@ export default function AnimatedCtaBottom() {
           Lass uns gemeinsam deine Geschäftsprozesse optimieren und in die Zukunft führen.
         </motion.p>
 
-        <div className="relative mt-8 flex flex-col items-center">
-          <MovingBorderButton
-            borderRadius="1rem"
-            className="bg-gradient-to-r from-[#00dfff] to-[#A855F7] text-white font-medium hover:shadow-xl transition-all duration-500 will-change-transform"
-            as={Link}
-            to="/kalender"
-            containerClassName="w-auto hover:scale-[1.02] active:scale-[0.98] transition-transform duration-500"
-            borderClassName="bg-[radial-gradient(circle,var(--accent-blue)_20%,var(--accent-purple)_30%,transparent_70%)] opacity-70"
-            duration={prefersReducedMotion ? 6000 : 4000}
-          >
-            <span className="flex items-center px-8 py-4">
-              Kostenloses Erstgespräch buchen
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
-            </span>
-          </MovingBorderButton>
+        <div className="relative mt-6 md:mt-8 flex flex-col items-center justify-center">
+          {/* Using the shared GradientButton component with vertical alignment fix */}
+          <div className="mx-auto block w-full max-w-xs md:max-w-md">
+            <GradientButton 
+              label="Kostenloses Erstgespräch buchen" 
+              to="/kalender" 
+              size="lg"
+            />
+          </div>
           <motion.p
-            className="mt-3 text-sm text-gray-500"
+            className="mt-3 text-sm text-gray-500 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

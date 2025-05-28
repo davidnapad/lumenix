@@ -61,7 +61,7 @@ export default function ImpressumPage() {
                   </h2>
                   <p className="text-gray-700 leading-relaxed">
                     Telefon: <a href="tel:+4917627068469" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">+49 176 27068469</a><br />
-                    E-Mail: <a href="mailto:kontakt@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">kontakt@lumenixmedia.de</a>
+                    E-Mail: <a href="mailto:support@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">support@lumenixmedia.de</a>
                   </p>
                 </div>
 

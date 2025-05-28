@@ -37,7 +37,7 @@ export default function Footer() {
             </p>
 
             <Link 
-              to="/kontakt"
+              to="/kalender"
               className="inline-flex items-center px-6 py-3 rounded-xl text-white font-medium transition-all active:scale-95 bg-gradient-to-r from-[#00dfff] to-[#A855F7] hover:shadow-lg hover:-translate-y-0.5"
             >
               Kostenloses Erstgespräch
@@ -75,6 +75,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
+                  to="/kalender"
+                  className="text-gray-600 hover:text-[#A855F7] transition-colors"
+                >
+                  Kalender
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/kontakt"
                   className="text-gray-600 hover:text-[#A855F7] transition-colors"
                 >
@@ -90,11 +98,11 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <a 
-                  href="mailto:info@lumenixmedia.de"
+                  href="mailto:support@lumenixmedia.de"
                   className="flex items-center text-gray-600 hover:text-[#A855F7] transition-colors"
                 >
                   <Mail className="w-5 h-5 mr-2" />
-                  info@lumenixmedia.de
+                  support@lumenixmedia.de
                 </a>
               </li>
               <li>

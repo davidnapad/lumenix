@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Linkedin, Youtube } from "lucide-react";
 import { motion } from "framer-motion";
@@ -26,9 +24,10 @@ export function TeamShowcase() {
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl" />
               <img 
-                src="https://i.postimg.cc/V66qXsmP/DSC02935-Photoroom-1.jpg" 
+                src="https://i.postimg.cc/4xVYmn8Y/2.png" 
                 alt="David" 
                 className="relative rounded-full w-32 h-32 object-cover object-center mx-auto ring-2 ring-[#00dfff]"
+                loading="eager"
               />
             </div>
             <h3 className="mt-4 text-lg font-semibold">David</h3>
@@ -72,9 +71,10 @@ export function TeamShowcase() {
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl" />
               <img 
-                src="https://i.postimg.cc/TP5mP53F/DSC02935-Photoroom.jpg" 
+                src="https://i.postimg.cc/Qdt6DGSY/1.png" 
                 alt="Daniel" 
                 className="relative rounded-full w-32 h-32 object-cover object-center mx-auto ring-2 ring-[#A855F7]"
+                loading="eager"
               />
             </div>
             <h3 className="mt-4 text-lg font-semibold">Daniel</h3>

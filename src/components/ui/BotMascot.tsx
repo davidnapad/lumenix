@@ -13,14 +13,14 @@ export function BotMascot({ direction }: BotMascotProps) {
 
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center p-4 md:p-6 optimize-gpu"
+      className="flex flex-col items-center justify-center optimize-gpu"
       initial={{ opacity: 0, scale: 0.5 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "100px 0px" }}
       transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
     >
       <motion.div 
-        className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center will-change-transform"
+        className="relative w-16 h-16 md:w-28 md:h-28 flex items-center justify-center will-change-transform"
         whileHover={prefersReducedMotion || isMobile ? {} : { scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
@@ -34,32 +34,27 @@ export function BotMascot({ direction }: BotMascotProps) {
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
               className="w-full h-full flex items-center justify-center"
             >
-              <Bot className="w-14 h-14 md:w-20 md:h-20 text-gray-900" />
+              <Bot className="w-10 h-10 md:w-16 md:h-16 text-gray-900" />
             </motion.div>
           </div>
         </div>
 
-        {/* Additional decorative elements - simplified for mobile */}
-        {!isMobile && (
-          <>
-            <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl opacity-50" />
-            <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-[#00dfff]/10 to-[#A855F7]/10 blur-2xl opacity-30" />
-          </>
-        )}
+        {/* Simplified glow effect */}
+        <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#00dfff]/20 to-[#A855F7]/20 blur-xl opacity-50" />
       </motion.div>
       
       {/* Title with gradient text */}
       <motion.div 
-        className="mt-4 md:mt-6 text-center"
+        className="mt-3 text-center"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.2, duration: prefersReducedMotion || isMobile ? 0.2 : 0.5 }}
+        transition={{ delay: 0.2, duration: 0.3 }}
       >
-        <h3 className="text-sm md:text-lg font-medium bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent">
+        <h3 className="text-xs md:text-base font-medium bg-gradient-to-r from-[#00dfff] to-[#A855F7] bg-clip-text text-transparent">
           KI mit Persönlichkeit
         </h3>
-        <p className="text-xs md:text-sm text-gray-600 mt-1">24/7 für dich da</p>
+        <p className="text-xs text-gray-600">24/7 für dich da</p>
       </motion.div>
     </motion.div>
   );

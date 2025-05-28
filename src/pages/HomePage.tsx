@@ -1,55 +1,98 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Phone, MessageSquare, Settings, Clock, TrendingUp, Smile, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { AuroraBackground } from '../components/ui/aurora-background';
-import { GradientIcon } from '../components/ui/GradientIcon';
 import { motion, useReducedMotion } from 'framer-motion';
 import ChatbotDemo from '../components/ChatbotDemo';
 import TeamSection from '../components/TeamSection';
-import CurvedTimeline from '../components/sections/CurvedTimeline';
 import { Accordion } from '../components/ui/Accordion';
 import AnimatedCtaBottom from '../components/sections/animated-cta-bottom';
+import { SurveyPopup } from '../components/ui/SurveyPopup';
+import { SparklesCore } from '../components/ui/sparkles';
+import KiSolutionsSection from '../components/KiSolutionsSection';
+import BusinessProblemsSection from '../components/BusinessProblemsSection';
+import { AlternatingProcessTimeline } from '../components/ui/AlternatingProcessTimeline';
+import ShuffleCards from '../components/sections/ShuffleCards';
+import { GradientButton } from '../components/shared/GradientButton';
 
 export default function HomePage() {
   const prefersReducedMotion = useReducedMotion();
+  const [surveyOpen, setSurveyOpen] = useState(false);
+  
+  // Ensure section IDs are properly set up
+  useEffect(() => {
+    // Check if section elements exist with the correct IDs
+    const sectionIds = ['leistungen', 'ablauf', 'ueber-uns'];
+    const missingSections = [];
+    
+    for (const id of sectionIds) {
+      const section = document.getElementById(id);
+      if (!section) {
+        missingSections.push(id);
+        console.warn(`Section with id "${id}" not found in the document.`);
+      }
+    }
+    
+    // Verify scroll-margin-top is properly applied
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach(section => {
+      const computedStyle = window.getComputedStyle(section);
+      const scrollMarginTop = computedStyle.scrollMarginTop;
+      
+      // If scroll-margin-top is not set or too small, apply it directly
+      if (scrollMarginTop === '0px' || parseInt(scrollMarginTop) < 100) {
+        section.style.scrollMarginTop = '120px';
+      }
+    });
+  }, []);
   
   const faqItems = [
     {
-      question: "Was kostet ein KI-Chatbot?",
-      answer: "Das hängt vom Umfang und Einsatzbereich ab – wir erstellen dir ein individuelles Angebot."
+      question: "Was unterscheidet Lumenix von anderen Agenturen?",
+      answer: "Wir kombinieren Spitzentechnologie mit maßgeschneiderten Strategien zur KI-Automatisierung. Unser Fokus liegt auf maximaler Prozesseffizienz und messbarem Wachstum für dein Business."
+    },
+    {
+      question: "Braucht mein Unternehmen überhaupt eine KI-Lösung?",
+      answer: "Unternehmen, die KI nutzen, überholen bereits ihre Konkurrenz durch Automatisierung und Kostenersparnis. Wer technologische Entwicklungen ignoriert, riskiert den Anschluss zu verlieren."
     },
     {
       question: "Wie lange dauert die Umsetzung?",
-      answer: "Je nach Projektumfang dauert es in der Regel zwischen 1 und 3 Wochen."
+      answer: "Je nach Projektumfang zwischen 2 und 6 Wochen. Einfache Chatbots sind oft in 2 Wochen einsatzbereit, komplexere Integrationen benötigen etwas mehr Zeit."
     },
     {
       question: "Muss ich etwas programmieren oder vorbereiten?",
-      answer: "Nein. Wir übernehmen Setup, Training und Integration – komplett ohne Aufwand für dich."
+      answer: "Nein, wir übernehmen den kompletten technischen Prozess. Du brauchst keine Vorkenntnisse – wir benötigen lediglich dein Fachwissen über dein Unternehmen."
     },
     {
       question: "Kann der Bot mit meinem System verbunden werden?",
-      answer: "Ja. Wir integrieren ihn z. B. in CRM, Webseiten, Support-Systeme oder Tools deiner Wahl."
+      answer: "Ja, wir integrieren KI-Lösungen nahtlos in deine bestehenden Systeme wie CRM, Website und Support-Tools. Wir unterstützen alle gängigen Plattformen sowie individuelle Systeme."
     }
   ];
 
-  const scrollToDemo = () => {
-    const demoSection = document.getElementById('chatbot-demo');
-    if (demoSection) {
-      const headerOffset = 80;
-      const elementPosition = demoSection.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: prefersReducedMotion ? 'auto' : 'smooth'
-      });
-    }
+  const openSurvey = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setSurveyOpen(true);
   };
+  
+  // Add event listener for the custom event
+  React.useEffect(() => {
+    const handleOpenSurvey = () => {
+      setSurveyOpen(true);
+    };
+    
+    window.addEventListener('openSurvey', handleOpenSurvey);
+    
+    return () => {
+      window.removeEventListener('openSurvey', handleOpenSurvey);
+    };
+  }, []);
 
   return (
     <>
+      {/* Survey Popup */}
+      <SurveyPopup isOpen={surveyOpen} onClose={() => setSurveyOpen(false)} />
+
       {/* Hero Section with Aurora Background */}
-      <AuroraBackground className="pt-24 md:pt-28 pb-20">
+      <AuroraBackground className="pt-2 md:pt-20 pb-2 md:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,111 +104,94 @@ export default function HomePage() {
           className="max-w-7xl mx-auto px-4 text-center relative z-10"
         >
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-8 text-gray-900">
+            {/* Decorative elements hidden on mobile */}
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: "80px", maxWidth: "25%" }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="h-[2px] bg-gradient-to-r from-transparent via-[#00dfff] to-transparent mb-1 md:mb-6 hidden md:block"
+            />
+            
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-1 md:mb-1 text-gray-900 mt-28 md:mt-0">
               Bring dein Business aufs{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00dfff] to-[#A855F7] mt-2 block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00dfff] to-[#A855F7] mt-0 md:mt-2 block">
                 nächste Level mit KI.
               </span>
             </h1>
 
-            <p className="mt-2 md:mt-6 text-lg md:text-xl text-gray-800 max-w-3xl mx-auto">
-              Voice Agents, Chatbots & Automatisierungen – individuell für dein Business.
+            {/* SparklesCore component - Hidden on mobile */}
+            <div className="relative w-full md:w-[40rem] h-0 md:h-16 mx-auto -mt-0 md:-mt-2 mb-0">
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1}
+                particleDensity={400}
+                className="w-full h-full hidden md:block"
+                particleColor="#FFFFFF"
+              />
+              <div className="absolute inset-0 w-full h-full [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)] hidden md:block"></div>
+            </div>
+
+            <p className="mt-1 md:mt-2 text-sm md:text-lg lg:text-xl text-gray-900 max-w-3xl mx-auto mb-3 md:mb-6">
+              Revolutioniere dein Unternehmen mit KI-gestützter Automatisierung – mehr Effizienz, weniger Aufwand.
             </p>
 
-            <div className="mt-8 md:mt-10 flex flex-col md:flex-row justify-center gap-4 md:gap-6">
-              <Link 
-                to="/kalender"
-                className="glass-button inline-flex items-center px-8 py-4 rounded-xl text-white transition-all active:scale-95 w-full md:w-auto justify-center will-change-transform"
-                style={{
-                  background: 'linear-gradient(to right, #00dfff, #A855F7)',
-                }}
-              >
-                <motion.span
-                  className="flex items-center"
-                  whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-                  whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
+            <div className="mt-1 md:mt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-6">
+              {/* First CTA Button */}
+              <div className="w-full max-w-xs md:max-w-md">
+                <GradientButton 
+                  label="Kostenlose Erstberatung" 
+                  to="/kalender" 
+                  size="md" 
+                />
+              </div>
+              
+              {/* Glassmorphism Demo Button */}
+              <div className="w-full max-w-xs md:max-w-md mt-2 md:mt-0">
+                <button 
+                  onClick={openSurvey}
+                  className="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-900 text-sm md:text-base font-semibold transition-all active:scale-95 relative group"
+                  style={{ 
+                    minHeight: '48px', 
+                    height: '48px',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    border: '1.5px solid transparent',
+                    backgroundImage: `
+                      linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+                      linear-gradient(to right, #00dfff, #A855F7)
+                    `,
+                    backgroundOrigin: 'border-box',
+                    backgroundClip: 'padding-box, border-box',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
+                  }}
                 >
-                  Kostenlose Erstberatung
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </motion.span>
-              </Link>
-              <button 
-                onClick={scrollToDemo}
-                className="glass-button inline-flex items-center px-8 py-4 rounded-xl text-white transition-all active:scale-95 w-full md:w-auto justify-center will-change-transform"
-                style={{
-                  background: 'linear-gradient(to right, #00dfff, #A855F7)',
-                }}
-              >
-                <motion.span
-                  className="flex items-center"
-                  whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
-                  whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
-                >
-                  Demo ansehen
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </motion.span>
-              </button>
+                  <span className="flex items-center whitespace-nowrap">
+                    Demo anfragen
+                    <ChevronDown className="ml-2 w-4 h-4 md:w-5 md:h-5" />
+                  </span>
+                </button>
+                
+                <p className="mt-1 text-xs text-center text-gray-900 font-medium">
+                  Deine individuelle KI-Demo in 48h – kostenlos!
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>
       </AuroraBackground>
 
-      {/* Services Section */}
-      <motion.section 
-        id="leistungen" 
-        className="py-20 bg-gray-50 scroll-mt-32"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: prefersReducedMotion ? 0.3 : 0.6 }}
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-16">🔧 Das machen wir für dich</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
-              className="hover-card bg-white p-8 rounded-xl text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={Phone} className="h-12 w-12 mb-6 mx-auto" />
-              <h3 className="text-xl font-bold mb-4">KI Voice Agents</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>Automatisierte Telefongespräche</li>
-                <li>Terminvereinbarung & Anfragen beantworten</li>
-                <li>Ideal für Support & Hotlines</li>
-              </ul>
-            </motion.div>
-            <motion.div 
-              className="hover-card bg-white p-8 rounded-xl text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={MessageSquare} className="h-12 w-12 mb-6 mx-auto" />
-              <h3 className="text-xl font-bold mb-4">KI Chatbots</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>Auf Website, WhatsApp oder Messenger</li>
-                <li>24/7 für deine Kunden erreichbar</li>
-                <li>Qualifiziert Leads & beantwortet Fragen</li>
-              </ul>
-            </motion.div>
-            <motion.div 
-              className="hover-card bg-white p-8 rounded-xl text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={Settings} className="h-12 w-12 mb-6 mx-auto" />
-              <h3 className="text-xl font-bold mb-4">KI-Automatisierungen</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>CRM-Verknüpfung, Aufgaben automatisieren</li>
-                <li>Follow-ups, Formulare, Workflows</li>
-                <li>Spart Zeit & sorgt für bessere Abläufe</li>
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
+      {/* Solutions and Demos Section */}
+      <KiSolutionsSection />
+      
+      {/* Business Problems Section */}
+      <BusinessProblemsSection />
 
-      {/* Team Section - Moved here */}
+      {/* Process Timeline */}
+      <AlternatingProcessTimeline />
+
+      {/* Team Section */}
       <section id="ueber-uns">
         <TeamSection />
       </section>
@@ -175,67 +201,20 @@ export default function HomePage() {
         <ChatbotDemo />
       </section>
 
-      {/* Benefits */}
-      <motion.section 
-        className="py-20 bg-white"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: prefersReducedMotion ? 0.3 : 0.6 }}
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-16">🚀 Mit KI effizienter arbeiten – und entspannter wachsen</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <motion.div 
-              className="text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={Clock} className="h-12 w-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold">Mehr Fokus auf<br />das Wesentliche</h3>
-            </motion.div>
-            <motion.div 
-              className="text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={TrendingUp} className="h-12 w-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold">Mehr Anfragen mit<br />weniger Aufwand</h3>
-            </motion.div>
-            <motion.div 
-              className="text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={Smile} className="h-12 w-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold">Besserer<br />Kundenservice</h3>
-            </motion.div>
-            <motion.div 
-              className="text-center will-change-transform"
-              whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <GradientIcon icon={RefreshCw} className="h-12 w-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold">Routine minimieren,<br />Effizienz steigern</h3>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
+      {/* Testimonials Section */}
+      <ShuffleCards />
 
-      {/* Process Timeline */}
-      <CurvedTimeline />
-
-      {/* FAQ */}
+      {/* FAQ Section */}
       <motion.section 
-        className="py-20 bg-gray-50"
+        className="py-12 md:py-20 bg-white"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: prefersReducedMotion ? 0.3 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-16">❓ Häufig gestellte Fragen</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-12">Häufig gestellte Fragen</h2>
+          <div className="rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
             <Accordion items={faqItems} />
           </div>
         </div>

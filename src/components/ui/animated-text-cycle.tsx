@@ -43,12 +43,14 @@ export default function AnimatedWordCycle({
 
   return (
     <div 
-      className="inline-block relative will-change-contents" 
+      className="inline-block relative will-change-contents optimize-gpu" 
       style={{ 
         minWidth,
         width: 'auto',
         height: '1.5em',
-        lineHeight: '1.5em'
+        lineHeight: '1.5em',
+        transform: 'translateZ(0)',
+        overflow: 'hidden'
       }}
     >
       <AnimatePresence mode="wait">
@@ -65,7 +67,8 @@ export default function AnimatedWordCycle({
               alignItems: 'center',
               justifyContent: 'flex-start',
               width: '100%',
-              height: '100%'
+              height: '100%',
+              transform: 'translateZ(0)',
             }}
           >
             {words[currentIndex]}

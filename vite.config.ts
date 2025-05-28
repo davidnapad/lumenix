@@ -3,12 +3,16 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import imagemin from 'vite-plugin-imagemin';
 import compression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   plugins: [
     react({
       // Optimize React refresh
       fastRefresh: true,
+      babel: {
+        plugins: ['@babel/plugin-transform-react-constant-elements'],
+      }
     }),
     imagemin({
       gifsicle: {
@@ -48,7 +52,15 @@ export default defineConfig({
       algorithm: 'brotliCompress',
       ext: '.br',
     }),
-  ],
+    process.env.ANALYZE === 'true' 
+      ? visualizer({
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+          template: 'treemap',
+        }) 
+      : null,
+  ].filter(Boolean),
   optimizeDeps: {
     exclude: ['lucide-react'],
     include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
@@ -73,27 +85,65 @@ export default defineConfig({
         drop_debugger: true,
         pure_funcs: ['console.log', 'console.info', 'console.debug'],
       },
+      mangle: {
+        safari10: true,
+      },
+      format: {
+        comments: false,
+      },
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          animations: ['framer-motion'],
-          ui: ['lucide-react', '@radix-ui/react-slot', 'clsx', 'class-variance-authority', 'tailwind-merge'],
-          // Split chunks by page to improve initial load time
-          'page-home': ['./src/pages/HomePage.tsx'],
-          'page-contact': ['./src/pages/ContactPage.tsx'],
-          'page-calendar': ['./src/pages/CalendarPage.tsx'],
-          'page-impressum': ['./src/pages/ImpressumPage.tsx'],
-          'page-privacy': ['./src/pages/PrivacyPage.tsx'],
+        manualChunks: (id) => {
+          // Create more granular chunk splitting
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor-react';
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-animations';
+            }
+            if (id.includes('lucide-react') || id.includes('radix-ui') || 
+                id.includes('clsx') || id.includes('class-variance')) {
+              return 'vendor-ui';
+            }
+            if (id.includes('@tsparticles')) {
+              return 'vendor-particles';
+            }
+            return 'vendor';
+          }
+          // Split code by pages for better code splitting
+          if (id.includes('/pages/')) {
+            const pageName = id.split('/pages/')[1].split('.')[0].toLowerCase();
+            return `page-${pageName}`;
+          }
+          // Split components by type
+          if (id.includes('/components/ui/')) {
+            return 'ui-components';
+          }
+          if (id.includes('/components/')) {
+            return 'feature-components';
+          }
         },
-        // Optimize chunk naming and asset organization
-        assetFileNames: 'assets/[name].[hash].[ext]',
+        // Optimize asset organization
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split('.');
+          const extType = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|webp/i.test(extType)) {
+            return `assets/images/[name].[hash][extname]`;
+          }
+          if (/woff|woff2|ttf|otf/i.test(extType)) {
+            return `assets/fonts/[name].[hash][extname]`;
+          }
+          return `assets/[name].[hash][extname]`;
+        },
         chunkFileNames: 'chunks/[name].[hash].js',
         entryFileNames: 'entries/[name].[hash].js',
       }
     },
     sourcemap: false,
+    // Improve CSS extraction
+    cssCodeSplit: true,
   },
   server: {
     // Optimize dev server
@@ -118,6 +168,9 @@ export default defineConfig({
   experimental: {
     renderBuiltUrl(filename) {
       if (filename.endsWith('.js')) {
+        return { relative: true, prepend: '', attributes: { prefetch: true, defer: true } };
+      }
+      if (filename.endsWith('.css')) {
         return { relative: true, prepend: '', attributes: { prefetch: true } };
       }
       return { relative: true };

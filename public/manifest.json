@@ -1,0 +1,26 @@
+{
+  "short_name": "Lumenix",
+  "name": "Lumenix Media",
+  "description": "KI Voice Agent, Chatbot & Automatisierungen für Unternehmen",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/jdMsMvrD/Design-ohne-Titel-3.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/jdMsMvrD/Design-ohne-Titel-3.png", 
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://i.postimg.cc/jdMsMvrD/Design-ohne-Titel-3.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00dfff",
+  "background_color": "#ffffff"
+}

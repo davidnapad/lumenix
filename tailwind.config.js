@@ -38,18 +38,46 @@ export default {
         shine: {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' }
-        }
+        },
+        'glow-border': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '400% 50%' }
+        },
+        'star-movement-bottom': {
+          '0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+          '100%': { transform: 'translate(-100%, 0%)', opacity: '0' },
+        },
+        'star-movement-top': {
+          '0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+          '100%': { transform: 'translate(100%, 0%)', opacity: '0' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' }
+        },
+        'button-shimmer': {
+          '0%': { transform: 'rotate(45deg) translateY(-100%)' },
+          '100%': { transform: 'rotate(45deg) translateY(100%)' }
+        },
       },
       animation: {
         aurora: 'aurora 15s linear infinite',
         gradient: 'gradient 10s ease infinite',
         pulse: 'pulse 3s ease-in-out infinite',
         sparkle: 'sparkle 2s ease-in-out infinite',
-        shine: 'shine 1.5s ease-in-out infinite'
+        shine: 'shine 1.5s ease-in-out infinite',
+        'glow-border': 'glow-border 10s linear infinite',
+        'star-movement-bottom': 'star-movement-bottom linear infinite alternate',
+        'star-movement-top': 'star-movement-top linear infinite alternate',
+        'float': 'float 5s ease-in-out infinite',
+        'button-shimmer': 'button-shimmer 4s linear infinite',
       },
       backgroundSize: {
         '200%': '200% 200%',
       },
+      opacity: {
+        '15': '0.15',
+      }
     },
   },
   plugins: [],

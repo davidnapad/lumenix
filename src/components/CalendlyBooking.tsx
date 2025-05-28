@@ -80,18 +80,18 @@ export default function CalendlyBooking() {
   }, [inView]);
 
   return (
-    <section ref={ref} id="calendly" className="py-16 px-6 bg-gray-50 content-visibility-auto">
+    <section ref={ref} id="calendly" className="py-12 md:py-16 px-4 md:px-6 bg-gray-50 content-visibility-auto">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-4">📅 Termin vereinbaren</h2>
-        <p className="mb-8 text-gray-700">
+        <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">📅 Termin vereinbaren</h2>
+        <p className="mb-6 md:mb-8 text-gray-700 text-sm md:text-base">
           Buche dir direkt einen freien Termin für ein kostenloses Erstgespräch.
         </p>
         
-        {/* Calendar container */}
+        {/* Calendar container - Added mobile responsive fixes */}
         <div className="relative w-full max-w-[1200px] mx-auto">
           {/* Glow effect */}
           <div 
-            className="absolute -inset-[2px] rounded-2xl"
+            className="absolute -inset-[2px] rounded-xl md:rounded-2xl"
             style={{
               background: 'linear-gradient(to right, rgba(0, 208, 255, 0.3), rgba(162, 89, 255, 0.3))',
               boxShadow: `
@@ -101,11 +101,12 @@ export default function CalendlyBooking() {
             }}
           />
           
-          {/* Calendar wrapper */}
+          {/* Calendar wrapper with responsive height adjustment */}
           <div 
-            className="relative bg-white rounded-2xl overflow-hidden will-change-transform optimize-gpu"
+            className="relative bg-white rounded-xl md:rounded-2xl overflow-hidden will-change-transform optimize-gpu"
             style={{
-              height: '750px',
+              height: isMobile ? '85vh' : '750px',
+              maxHeight: isMobile ? '85vh' : '750px',
               transform: 'translateZ(0)',
               backfaceVisibility: 'hidden'
             }}
@@ -124,10 +125,11 @@ export default function CalendlyBooking() {
               style={{ 
                 width: '100%', 
                 height: '100%', 
-                overflow: 'scroll', 
+                overflow: 'auto', 
                 willChange: 'transform',
                 transform: 'translateZ(0)',
-                backfaceVisibility: 'hidden'
+                backfaceVisibility: 'hidden',
+                WebkitOverflowScrolling: 'touch', // Better mobile scrolling
               }}
             />
           </div>

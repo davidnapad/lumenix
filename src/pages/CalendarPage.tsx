@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -6,10 +6,22 @@ import { Link, useLocation } from 'react-router-dom';
 export default function CalendarPage() {
   const location = useLocation();
   const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   }, [location, prefersReducedMotion]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -68,7 +80,7 @@ export default function CalendarPage() {
       {/* Background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white -z-10" />
       
-      <div className="pt-32 pb-32">
+      <div className="pt-24 md:pt-32 pb-16 md:pb-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,17 +91,17 @@ export default function CalendarPage() {
           <div className="w-full max-w-[720px]">
             <Link 
               to="/"
-              className="inline-flex items-center text-gray-600 hover:text-[#00dfff] transition-colors mb-8 group"
+              className="inline-flex items-center text-gray-600 hover:text-[#00dfff] transition-colors mb-6 md:mb-8 group py-2"
             >
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               Zurück zur Startseite
             </Link>
 
-            <h1 className="text-4xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-[#00dfff] to-[#A855F7]">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-12 text-transparent bg-clip-text bg-gradient-to-r from-[#00dfff] to-[#A855F7]">
               Termin vereinbaren
             </h1>
 
-            <p className="text-lg text-gray-700 mb-8">
+            <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8">
               Buche dir direkt einen freien Termin für ein kostenloses Erstgespräch.
             </p>
           </div>
@@ -110,24 +122,33 @@ export default function CalendarPage() {
             
             {/* Calendar wrapper */}
             <div 
-              className="relative bg-white rounded-xl md:rounded-2xl overflow-hidden will-change-transform"
+              className="relative bg-white rounded-xl md:rounded-2xl overflow-hidden will-change-transform optimize-gpu"
               style={{
-                height: '750px'
+                height: isMobile ? '85vh' : '750px',
+                minHeight: isMobile ? '500px' : '750px',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden'
               }}
             >
               <div 
                 id="my-cal-inline" 
                 className="w-full h-full"
-                style={{ width: '100%', height: '100%', overflow: 'scroll', willChange: 'transform' }}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  overflow: 'auto', 
+                  willChange: 'transform',
+                  WebkitOverflowScrolling: 'touch' // Better mobile scrolling
+                }}
               />
             </div>
           </div>
 
           {/* Back to top button */}
-          <div className="w-full max-w-[720px] text-center mt-8">
+          <div className="w-full max-w-[720px] text-center mt-6 md:mt-8">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' })}
-              className="inline-flex items-center text-gray-600 hover:text-[#00dfff] transition-colors"
+              className="inline-flex items-center text-gray-600 hover:text-[#00dfff] transition-colors py-2"
             >
               Nach oben scrollen
             </button>

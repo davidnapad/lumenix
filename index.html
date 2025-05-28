@@ -3,18 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="https://i.postimg.cc/jdMsMvrD/Design-ohne-Titel-3.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="description" content="Lumenix Media – KI Voice Agent, Chatbot & Automatisierungen für Unternehmen" />
     <title>Lumenix Media – KI Voice Agent, Chatbot & Automatisierungen für Unternehmen</title>
     
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://i.postimg.cc" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     
     <!-- Preload logo -->
-    <link rel="preload" href="https://i.postimg.cc/VvGDNZ46/Lumenix-8.png" as="image" />
+    <link rel="preload" href="https://i.postimg.cc/VvGDNZ46/Lumenix-8.png" as="image" fetchpriority="high" />
+    
+    <!-- Preload hero image -->
+    <link rel="preload" href="/src/main.tsx" as="script" fetchpriority="high" />
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#00dfff">
     
     <!-- Caching directives -->
     <meta http-equiv="Cache-control" content="public, max-age=31536000">
@@ -27,6 +36,11 @@
         margin: 0;
         padding: 0;
         text-rendering: optimizeSpeed;
+        overflow-x: hidden;
+        max-width: 100vw;
+        overscroll-behavior: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       .loader-placeholder {
         position: fixed;
@@ -39,6 +53,8 @@
         justify-content: center;
         background-color: #ffffff;
         z-index: 9999;
+        will-change: opacity;
+        transform: translateZ(0);
       }
       .loader-spinner {
         width: 40px;
@@ -47,9 +63,15 @@
         border-top-color: #00CFFF;
         border-radius: 50%;
         animation: spin 1s infinite linear;
+        will-change: transform;
       }
       @keyframes spin {
         to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loader-spinner {
+          animation-duration: 1.5s;
+        }
       }
     </style>
   </head>
@@ -64,7 +86,7 @@
     <!-- Remove loader once page loads -->
     <script>
       window.addEventListener('load', function() {
-        setTimeout(function() {
+        requestIdleCallback(function() {
           const loader = document.getElementById('initial-loader');
           if (loader) {
             loader.style.opacity = '0';
@@ -75,8 +97,21 @@
               }
             }, 300);
           }
-        }, 100);
+        }, { timeout: 1000 });
       });
+
+      // Add requestIdleCallback polyfill for browsers that don't support it
+      window.requestIdleCallback = window.requestIdleCallback || function(cb) {
+        const start = Date.now();
+        return setTimeout(function() {
+          cb({
+            didTimeout: false,
+            timeRemaining: function() {
+              return Math.max(0, 50 - (Date.now() - start));
+            }
+          });
+        }, 1);
+      };
     </script>
     
     <script type="module" src="/src/main.tsx"></script>

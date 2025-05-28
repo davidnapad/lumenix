@@ -6,7 +6,6 @@ interface TeamMemberProps {
   name: string;
   role: string;
   mobileRole?: string;
-  subtitle?: string;
   image?: string;
   className?: string;
 }
@@ -15,7 +14,6 @@ export function TeamMember({
   name, 
   role,
   mobileRole,
-  subtitle,
   image,
   className 
 }: TeamMemberProps) {
@@ -30,7 +28,6 @@ export function TeamMember({
     
     checkMobile();
     
-    // Debounced resize listener
     let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(resizeTimer);
@@ -57,7 +54,8 @@ export function TeamMember({
   return (
     <motion.div 
       className={cn(
-        "flex flex-col items-center p-4 md:p-8 rounded-2xl bg-white shadow-lg border border-gray-100 h-full optimize-gpu",
+        "flex flex-col items-center p-3 md:p-4 rounded-xl bg-white shadow-md border border-gray-100/60 h-full optimize-gpu",
+        "overflow-visible", // Ensure content is not cut off
         className
       )}
       initial={{ opacity: 0, y: 20 }}
@@ -66,15 +64,15 @@ export function TeamMember({
       transition={{ duration: prefersReducedMotion || isMobile ? 0.3 : 0.5 }}
     >
       <motion.div 
-        className="relative mb-4 md:mb-6 group"
+        className="relative mb-3 group"
         whileHover={prefersReducedMotion || isMobile ? {} : { scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {/* Simplified glow effect for mobile */}
-        <div className={`absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff] to-[#A855F7] ${isMobile ? 'blur-md' : 'blur-xl'} opacity-30 group-hover:opacity-50 transition-opacity`} />
+        {/* Simplified glow effect */}
+        <div className={`absolute inset-0 rounded-full bg-gradient-to-r from-[#00dfff] to-[#A855F7] ${isMobile ? 'blur-sm' : 'blur-md'} opacity-30 group-hover:opacity-50 transition-opacity`} />
         
-        {/* Image placeholder until loaded */}
-        <div className="relative w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden ring-2 ring-[#00dfff]/20">
+        {/* Image container with fixed dimensions to prevent layout shift */}
+        <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden ring-2 ring-[#00dfff]/20">
           {image && (
             <>
               {!imageLoaded && (
@@ -84,14 +82,14 @@ export function TeamMember({
                 src={image}
                 alt={name}
                 className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                width={isMobile ? 80 : 128}
-                height={isMobile ? 80 : 128}
-                loading="lazy"
+                width={isMobile ? 64 : 96}
+                height={isMobile ? 64 : 96}
+                loading="eager"
                 decoding="async"
                 onLoad={() => setImageLoaded(true)}
                 style={{
                   transform: 'translateZ(0)',
-                  willChange: 'transform'
+                  willChange: 'transform',
                 }}
               />
             </>
@@ -100,8 +98,8 @@ export function TeamMember({
       </motion.div>
 
       <div className="text-center flex-1 flex flex-col justify-center">
-        <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1 md:mb-2">{name}</h3>
-        <p className="text-sm md:text-base text-gray-800 font-medium mb-1">
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">{name}</h3>
+        <p className="text-xs md:text-sm text-gray-600 font-medium break-words whitespace-normal px-1">
           <span className="hidden md:inline">{role}</span>
           <span className="md:hidden">{mobileRole || role}</span>
         </p>

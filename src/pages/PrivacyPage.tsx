@@ -55,7 +55,7 @@ export default function PrivacyPage() {
                     77656 Offenburg<br />
                     Deutschland<br /><br />
                     Telefon: <a href="tel:+4917627068469" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">+49 176 27068469</a><br />
-                    E-Mail: <a href="mailto:kontakt@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">kontakt@lumenixmedia.de</a>
+                    E-Mail: <a href="mailto:support@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">support@lumenixmedia.de</a>
                   </p>
                 </div>
 
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
                   <p className="text-gray-700 leading-relaxed">
                     Wir haben für unser Unternehmen einen Datenschutzbeauftragten benannt:<br /><br />
                     David Napadovsky<br />
-                    E-Mail: <a href="mailto:datenschutz@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">datenschutz@lumenixmedia.de</a>
+                    E-Mail: <a href="mailto:support@lumenixmedia.de" className="text-[#00dfff] hover:text-[#A855F7] transition-colors">support@lumenixmedia.de</a>
                   </p>
                 </div>
 

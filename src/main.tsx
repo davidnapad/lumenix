@@ -1,7 +1,16 @@
-import { StrictMode } from 'react';
+import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
 import './index.css';
+
+// Use dynamic import for the main App component
+const App = lazy(() => import('./App.tsx'));
+
+// Loader component for Suspense fallback
+const Loader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="w-12 h-12 border-4 border-t-transparent border-accent-blue rounded-full animate-spin"></div>
+  </div>
+);
 
 // Create container for hydration
 const container = document.getElementById('root')!;
@@ -12,10 +21,12 @@ const inDevMode = import.meta.env.DEV;
 if (inDevMode) {
   const startTime = performance.now();
   
-  // Render app
+  // Render app with Suspense
   root.render(
     <StrictMode>
-      <App />
+      <Suspense fallback={<Loader />}>
+        <App />
+      </Suspense>
     </StrictMode>
   );
   
@@ -34,10 +45,15 @@ if (inDevMode) {
     }
   });
 } else {
-  // Production render without metrics
+  // Production render with Suspense but without metrics
   root.render(
     <StrictMode>
-      <App />
+      <Suspense fallback={<Loader />}>
+        <App />
+      </Suspense>
     </StrictMode>
   );
 }
+
+// Service Worker registration removed as it's not supported in StackBlitz
+// See: https://github.com/stackblitz/webcontainer-core/issues/846
